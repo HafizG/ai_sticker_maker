@@ -4,32 +4,42 @@
     {
       "id": "c1",
       "title": "Cute Animals",
-      "icon": "stickers/animals/listening.png",
+      "icon": "stickers/animals/1.png",
       "packs": [
         {
           "id": "p1",
-          "name": "Cats",
-          "tray": "stickers/animals/listening.png",
-          "packUrl": "packs/cats.json"
-        },
-        {
-          "id": "p2",
-          "name": "Dogs",
-          "tray": "stickers/animals/dog.png",
-          "packUrl": "packs/dogs.json"
+          "name": "Cat",
+          "folder": "stickers/cats",
+          "countries": ["PK", "SA", "AE", "IN", "BD"]
         }
       ]
     },
     {
       "id": "c2",
-      "title": "Memes",
-      "icon": "stickers/memes/troll.png",
+      "title": "Dog",
+      "icon": "stickers/animals/dog/1.webp",
       "packs": [
         {
+          "id": "p2",
+          "name": "Cats",
+          "folder": "stickers/animals/dog"
+        },
+        {
           "id": "p3",
+          "name": "Dogs",
+          "folder": "stickers/animals/dogs"
+        }
+      ]
+    },
+    {
+      "id": "c3",
+      "title": "Memes",
+      "icon": "stickers/memes/1.webp",
+      "packs": [
+        {
+          "id": "p4",
           "name": "Classic Memes",
-          "tray": "stickers/memes/troll.png",
-          "packUrl": "packs/memes.json"
+          "folder": "stickers/memes"
         }
       ]
     }
