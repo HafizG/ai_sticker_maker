@@ -1,1 +1,37 @@
-{}
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "c1",
+      "title": "Cute Animals",
+      "icon": "stickers/animals/listening.png",
+      "packs": [
+        {
+          "id": "p1",
+          "name": "Cats",
+          "tray": "stickers/animals/listening.png",
+          "packUrl": "packs/cats.json"
+        },
+        {
+          "id": "p2",
+          "name": "Dogs",
+          "tray": "stickers/animals/dog.png",
+          "packUrl": "packs/dogs.json"
+        }
+      ]
+    },
+    {
+      "id": "c2",
+      "title": "Memes",
+      "icon": "stickers/memes/troll.png",
+      "packs": [
+        {
+          "id": "p3",
+          "name": "Classic Memes",
+          "tray": "stickers/memes/troll.png",
+          "packUrl": "packs/memes.json"
+        }
+      ]
+    }
+  ]
+}
