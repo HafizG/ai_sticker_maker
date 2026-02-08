@@ -9,19 +9,19 @@
         {
           "id": "p1",
           "name": "Cat",
-          "folder": "stickers/cats",
+          "folder": "stickers/animals/cats",
           "countries": ["PK", "SA", "AE", "IN", "BD"]
         },
         {
              "id": "p2",
           "name": "Dog",
-          "folder": "stickers/dog",
+          "folder": "stickers/animals/dog",
           "countries": ["PK", "SA", "AE", "IN", "BD"]
         },
         {
            "id": "p3",
           "name": "Monkey",
-          "folder": "stickers/cats",
+          "folder": "stickers/animals/cats",
           "countries": ["PK", "SA", "AE", "IN", "BD"]
         } ]
     },
