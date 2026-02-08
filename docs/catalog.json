@@ -18,11 +18,12 @@
           "folder": "stickers/dog",
           "countries": ["PK", "SA", "AE", "IN", "BD"]
         },
+        {
            "id": "p3",
           "name": "Monkey",
           "folder": "stickers/cats",
           "countries": ["PK", "SA", "AE", "IN", "BD"]
-      ]
+        } ]
     },
     {
       "id": "c2",
