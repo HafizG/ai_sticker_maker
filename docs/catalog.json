@@ -4,7 +4,7 @@
     {
       "id": "c1",
       "title": "Cute Animals",
-      "icon": "stickers/animals/1.png",
+      "icon": "stickers/animals/cats/1.png",
       "packs": [
         {
           "id": "p1",
@@ -28,7 +28,7 @@
     {
       "id": "c2",
       "title": "Dog",
-      "icon": "stickers/animals/dog/1.webp",
+      "icon": "stickers/animals/dog/1.png",
       "packs": [
         {
           "id": "p2",
@@ -45,7 +45,7 @@
     {
       "id": "c3",
       "title": "Memes",
-      "icon": "stickers/memes/1.webp",
+      "icon": "stickers/animals/cats/1.webp",
       "packs": [
         {
           "id": "p4",
