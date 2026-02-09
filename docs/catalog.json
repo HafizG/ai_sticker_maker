@@ -4,12 +4,12 @@
     {
       "id": "c1",
       "title": "Cute Animals",
-      "icon": "stickers/animals/cats/1.png",
+      "icon": "stickers/animals/cats/1.webp",
       "packs": [
         {
           "id": "p1",
           "name": "Cat",
-          "folder": "stickers/animals/cats",
+          "folder": "stickers/animals/cat",
           "countries": ["PK", "SA", "AE", "IN", "BD"]
         },
         {
@@ -21,14 +21,14 @@
         {
            "id": "p3",
           "name": "Monkey",
-          "folder": "stickers/animals/cats",
+          "folder": "stickers/animals/cat",
           "countries": ["PK", "SA", "AE", "IN", "BD"]
         } ]
     },
     {
       "id": "c2",
       "title": "Dog",
-      "icon": "stickers/animals/dog/1.png",
+      "icon": "stickers/animals/dog/1.webp",
       "packs": [
         {
           "id": "p2",
@@ -38,7 +38,7 @@
         {
           "id": "p3",
           "name": "Dogs",
-          "folder": "stickers/animals/dogs"
+          "folder": "stickers/animals/dog"
         }
       ]
     },
