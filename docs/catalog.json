@@ -4,7 +4,7 @@
     {
       "id": "c1",
       "title": "Cute Animals",
-      "icon": "stickers/animals/cats/1.webp",
+      "icon": "stickers/animals/cats/tray.webp",
       "packs": [
         {
           "id": "p1",
@@ -28,7 +28,7 @@
     {
       "id": "c2",
       "title": "Dog",
-      "icon": "stickers/animals/dog/1.webp",
+      "icon": "stickers/animals/dog/tray.webp",
       "packs": [
         {
           "id": "p2",
