@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Node
+node_modules/
+
+# Auto-generated (CI recreates these)
+# Uncomment below if you want to keep generated files out of git:
+# sticker-cdn/index.json
+# sticker-cdn/regions/
+
+# Logs
+*.log
+npm-debug.log*
