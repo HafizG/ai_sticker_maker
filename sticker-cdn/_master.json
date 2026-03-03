@@ -1,0 +1,96 @@
+{
+  "v": 1,
+  "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
+
+  "categories": [
+    { "id": "funny",      "name": "Funny"     },
+    { "id": "greetings",  "name": "Greetings" },
+    { "id": "sports",     "name": "Sports"    },
+    { "id": "emotions",   "name": "Emotions"  },
+    { "id": "religious",  "name": "Religious" },
+    { "id": "festivals",  "name": "Festivals" },
+    { "id": "love",       "name": "Love"      },
+    { "id": "trending",   "name": "Trending"  },
+    { "id": "extra",      "name": "Extra ★"   }
+  ],
+
+  "regions": ["PK", "IN", "SA", "AE", "ID", "BD", "TR", "EG"],
+
+  "zones": [
+    { "id": "_arab",           "countries": ["LB", "SY", "LY", "SD", "YE", "PS", "MR"] },
+    { "id": "_south-asia",     "countries": ["LK", "NP", "AF", "MV", "MM"] },
+    { "id": "_southeast-asia", "countries": ["TH", "VN", "KH", "LA", "SG", "BN"] },
+    { "id": "_africa",         "countries": ["KE", "GH", "ZA", "TZ", "UG", "ET", "CM", "SN"] },
+    { "id": "_eu",             "countries": ["DE", "FR", "GB", "ES", "IT", "NL", "US", "CA", "AU"] },
+    { "id": "_latam",          "countries": ["BR", "MX", "AR", "CO", "CL", "PE", "VE"] }
+  ],
+
+  "packs": [
+    {
+      "id": "pk-funny-urdu",
+      "name": "Funny Urdu Stickers",
+      "cat": ["funny"],
+      "regions": ["PK"]
+    },
+    {
+      "id": "pk-cricket-fans",
+      "name": "Cricket Fans PK",
+      "cat": ["sports"],
+      "regions": ["PK"]
+    },
+    {
+      "id": "pk-ramadan-memes",
+      "name": "Funny Ramadan Memes",
+      "cat": ["funny", "religious"],
+      "regions": ["PK"]
+    },
+    {
+      "id": "sa-arabic-greetings",
+      "name": "Arabic Greetings",
+      "cat": ["greetings"],
+      "regions": ["SA", "AE", "_arab"]
+    },
+    {
+      "id": "arab-ramadan-eid",
+      "name": "Ramadan & Eid",
+      "cat": ["religious", "festivals"],
+      "regions": ["SA", "AE", "PK", "ID", "BD", "_arab", "_south-asia"]
+    },
+    {
+      "id": "global-emoji-remix",
+      "name": "Emoji Remix",
+      "cat": ["funny", "emotions"],
+      "regions": ["*"]
+    },
+    {
+      "id": "global-reactions",
+      "name": "Reaction Stickers",
+      "cat": ["funny"],
+      "regions": ["*"]
+    },
+    {
+      "id": "global-love-hearts",
+      "name": "Love & Hearts",
+      "cat": ["love"],
+      "regions": ["*"]
+    },
+    {
+      "id": "extra-vintage-pack",
+      "name": "Vintage Collection",
+      "cat": ["extra"],
+      "regions": ["*"]
+    },
+    {
+      "id": "extra-pk-independence",
+      "name": "14 August Special",
+      "cat": ["extra"],
+      "regions": ["PK"]
+    },
+    {
+      "id": "extra-sa-national-day",
+      "name": "Saudi National Day",
+      "cat": ["extra"],
+      "regions": ["SA"]
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "v": 1,
+  "baseUrl": "https://hafizg.github.io/sticker_pack_github/sticker-cdn",
+  "categories": [
+    {
+      "id": "funny",
+      "name": "Funny"
+    },
+    {
+      "id": "greetings",
+      "name": "Greetings"
+    },
+    {
+      "id": "sports",
+      "name": "Sports"
+    },
+    {
+      "id": "emotions",
+      "name": "Emotions"
+    },
+    {
+      "id": "religious",
+      "name": "Religious"
+    },
+    {
+      "id": "festivals",
+      "name": "Festivals"
+    },
+    {
+      "id": "love",
+      "name": "Love"
+    },
+    {
+      "id": "trending",
+      "name": "Trending"
+    },
+    {
+      "id": "extra",
+      "name": "Extra ★"
+    }
+  ],
+  "regions": {
+    "PK": 1,
+    "IN": 1,
+    "SA": 1,
+    "AE": 1,
+    "ID": 1,
+    "BD": 1,
+    "TR": 1,
+    "EG": 1
+  },
+  "zones": {
+    "_arab": {
+      "v": 1,
+      "countries": [
+        "LB",
+        "SY",
+        "LY",
+        "SD",
+        "YE",
+        "PS",
+        "MR"
+      ]
+    },
+    "_south-asia": {
+      "v": 1,
+      "countries": [
+        "LK",
+        "NP",
+        "AF",
+        "MV",
+        "MM"
+      ]
+    },
+    "_southeast-asia": {
+      "v": 1,
+      "countries": [
+        "TH",
+        "VN",
+        "KH",
+        "LA",
+        "SG",
+        "BN"
+      ]
+    },
+    "_africa": {
+      "v": 1,
+      "countries": [
+        "KE",
+        "GH",
+        "ZA",
+        "TZ",
+        "UG",
+        "ET",
+        "CM",
+        "SN"
+      ]
+    },
+    "_eu": {
+      "v": 1,
+      "countries": [
+        "DE",
+        "FR",
+        "GB",
+        "ES",
+        "IT",
+        "NL",
+        "US",
+        "CA",
+        "AU"
+      ]
+    },
+    "_latam": {
+      "v": 1,
+      "countries": [
+        "BR",
+        "MX",
+        "AR",
+        "CO",
+        "CL",
+        "PE",
+        "VE"
+      ]
+    }
+  },
+  "defaultRegion": "_default"
+}

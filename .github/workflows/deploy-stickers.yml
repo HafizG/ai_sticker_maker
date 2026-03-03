@@ -1,0 +1,68 @@
+name: Deploy Sticker CDN
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sticker-cdn/**'
+      - 'scripts/generate.js'
+
+  # Allow manual trigger from GitHub UI
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time, cancel in-progress if new push arrives
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # ─── Job 1: Validate & Generate ─────────────────────────────────────
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate & generate registry files
+        run: node scripts/generate.js
+
+      - name: List generated files (debug)
+        run: |
+          echo "=== index.json ==="
+          cat sticker-cdn/index.json | head -30
+          echo ""
+          echo "=== Region files ==="
+          ls -la sticker-cdn/regions/
+          echo ""
+          echo "=== Pack folders ==="
+          ls -la sticker-cdn/packs/
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'sticker-cdn'
+
+  # ─── Job 2: Deploy to GitHub Pages ──────────────────────────────────
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

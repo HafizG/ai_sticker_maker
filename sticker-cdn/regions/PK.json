@@ -1,0 +1,80 @@
+{
+  "v": 1,
+  "packs": [
+    {
+      "id": "pk-funny-urdu",
+      "name": "Funny Urdu Stickers",
+      "cat": [
+        "funny"
+      ],
+      "count": 3
+    },
+    {
+      "id": "pk-cricket-fans",
+      "name": "Cricket Fans PK",
+      "cat": [
+        "sports"
+      ],
+      "count": 2
+    },
+    {
+      "id": "pk-ramadan-memes",
+      "name": "Funny Ramadan Memes",
+      "cat": [
+        "funny",
+        "religious"
+      ],
+      "count": 8
+    },
+    {
+      "id": "arab-ramadan-eid",
+      "name": "Ramadan & Eid",
+      "cat": [
+        "religious",
+        "festivals"
+      ],
+      "count": 20
+    },
+    {
+      "id": "global-emoji-remix",
+      "name": "Emoji Remix",
+      "cat": [
+        "funny",
+        "emotions"
+      ],
+      "count": 15
+    },
+    {
+      "id": "global-reactions",
+      "name": "Reaction Stickers",
+      "cat": [
+        "funny"
+      ],
+      "count": 18
+    },
+    {
+      "id": "global-love-hearts",
+      "name": "Love & Hearts",
+      "cat": [
+        "love"
+      ],
+      "count": 12
+    },
+    {
+      "id": "extra-vintage-pack",
+      "name": "Vintage Collection",
+      "cat": [
+        "extra"
+      ],
+      "count": 10
+    },
+    {
+      "id": "extra-pk-independence",
+      "name": "14 August Special",
+      "cat": [
+        "extra"
+      ],
+      "count": 6
+    }
+  ]
+}

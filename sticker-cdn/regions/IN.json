@@ -1,0 +1,38 @@
+{
+  "v": 1,
+  "packs": [
+    {
+      "id": "global-emoji-remix",
+      "name": "Emoji Remix",
+      "cat": [
+        "funny",
+        "emotions"
+      ],
+      "count": 15
+    },
+    {
+      "id": "global-reactions",
+      "name": "Reaction Stickers",
+      "cat": [
+        "funny"
+      ],
+      "count": 18
+    },
+    {
+      "id": "global-love-hearts",
+      "name": "Love & Hearts",
+      "cat": [
+        "love"
+      ],
+      "count": 12
+    },
+    {
+      "id": "extra-vintage-pack",
+      "name": "Vintage Collection",
+      "cat": [
+        "extra"
+      ],
+      "count": 10
+    }
+  ]
+}
