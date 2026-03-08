@@ -1,11 +1,17 @@
 /**
- * generate.js — CI Build Script
+ * generate.js — CI Build Script (v2 — Country-first)
  *
  * Reads _master.json + scans pack folders → generates:
- *   - sticker-cdn/index.json
- *   - sticker-cdn/regions/{REGION}.json  (one per region)
- *   - sticker-cdn/regions/{ZONE}.json    (one per zone)
- *   - sticker-cdn/regions/_default.json
+ *   - sticker-cdn/countries/{CC}.json   (one per country)
+ *   - sticker-cdn/countries/_default.json
+ *   - sticker-cdn/index.json            (country list + metadata)
+ *
+ * New v2 concepts:
+ *   - No regions/zones/wildcards
+ *   - Countries declare their own packs + categories
+ *   - "same_as" pointer for countries that share config
+ *   - "hidden" array per pack to exclude individual stickers
+ *   - Each country file is self-contained (1 request from app)
  *
  * Usage: node scripts/generate.js
  * Exit code 1 on validation failure → blocks CI deploy.
@@ -18,7 +24,7 @@ const path = require('path');
 const CDN_DIR = path.join(__dirname, '..', 'sticker-cdn');
 const MASTER_PATH = path.join(CDN_DIR, '_master.json');
 const PACKS_DIR = path.join(CDN_DIR, 'packs');
-const REGIONS_DIR = path.join(CDN_DIR, 'regions');
+const COUNTRIES_DIR = path.join(CDN_DIR, 'countries');
 const MAX_STICKERS = 30;
 
 // ─── Load master ───────────────────────────────────────────────────────
@@ -31,29 +37,25 @@ const master = JSON.parse(fs.readFileSync(MASTER_PATH, 'utf8'));
 const errors = [];
 const warnings = [];
 
-// ─── Validate master structure ─────────────────────────────────────────
+// ─── Step 1: Validate master structure ─────────────────────────────────
 if (typeof master.v !== 'number' || master.v < 1) {
   errors.push('"v" must be a positive integer');
 }
 
 if (!master.baseUrl || typeof master.baseUrl !== 'string') {
-  errors.push('"baseUrl" must be a non-empty string (e.g. "https://hafizg.github.io/ai_sticker_maker")');
+  errors.push('"baseUrl" must be a non-empty string');
 }
 
-if (!Array.isArray(master.categories) || master.categories.length === 0) {
-  errors.push('"categories" must be a non-empty array');
+if (!master.categories || typeof master.categories !== 'object' || Array.isArray(master.categories)) {
+  errors.push('"categories" must be an object { id: "Display Name" }');
 }
 
-if (!Array.isArray(master.regions)) {
-  errors.push('"regions" must be an array');
+if (!master.packs || typeof master.packs !== 'object' || Array.isArray(master.packs)) {
+  errors.push('"packs" must be an object { packId: { name, cat, hidden } }');
 }
 
-if (!Array.isArray(master.zones)) {
-  errors.push('"zones" must be an array');
-}
-
-if (!Array.isArray(master.packs) || master.packs.length === 0) {
-  errors.push('"packs" must be a non-empty array');
+if (!master.countries || typeof master.countries !== 'object' || Array.isArray(master.countries)) {
+  errors.push('"countries" must be an object');
 }
 
 // Bail early on structural errors
@@ -63,131 +65,147 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-// ─── Build lookup sets ─────────────────────────────────────────────────
-const catIds = new Set(master.categories.map(c => c.id));
-const regionCodes = new Set(master.regions);
-const zoneIds = new Set(master.zones.map(z => z.id));
+// ─── Step 2: Validate categories ───────────────────────────────────────
+const catIds = new Set(Object.keys(master.categories));
 
-// Check for duplicate category IDs
-const catIdList = master.categories.map(c => c.id);
-const dupCats = catIdList.filter((id, i) => catIdList.indexOf(id) !== i);
-if (dupCats.length > 0) {
-  errors.push(`Duplicate category IDs: ${[...new Set(dupCats)].join(', ')}`);
+if (catIds.size === 0) {
+  errors.push('No categories defined');
 }
 
-// Check for duplicate pack IDs
-const packIdList = master.packs.map(p => p.id);
-const dupPacks = packIdList.filter((id, i) => packIdList.indexOf(id) !== i);
-if (dupPacks.length > 0) {
-  errors.push(`Duplicate pack IDs: ${[...new Set(dupPacks)].join(', ')}`);
-}
-
-// Check for duplicate zone IDs
-const zoneIdList = master.zones.map(z => z.id);
-const dupZones = zoneIdList.filter((id, i) => zoneIdList.indexOf(id) !== i);
-if (dupZones.length > 0) {
-  errors.push(`Duplicate zone IDs: ${[...new Set(dupZones)].join(', ')}`);
-}
-
-// Validate zone format
-for (const zone of master.zones) {
-  if (!zone.id.startsWith('_')) {
-    errors.push(`Zone ID "${zone.id}" must start with "_"`);
-  }
-  if (!Array.isArray(zone.countries) || zone.countries.length === 0) {
-    errors.push(`Zone "${zone.id}" must have a non-empty countries array`);
+for (const [id, name] of Object.entries(master.categories)) {
+  if (typeof name !== 'string' || name.trim() === '') {
+    errors.push(`Category "${id}" must have a non-empty string name`);
   }
 }
 
-// ─── Step 1: Scan pack folders & validate ──────────────────────────────
-if (!fs.existsSync(REGIONS_DIR)) {
-  fs.mkdirSync(REGIONS_DIR, { recursive: true });
+// ─── Step 3: Validate packs ───────────────────────────────────────────
+const packIds = new Set(Object.keys(master.packs));
+
+if (packIds.size === 0) {
+  errors.push('No packs defined');
 }
 
-const packCounts = {};
-
-for (const pack of master.packs) {
-  // Validate required fields
-  if (!pack.id || typeof pack.id !== 'string') {
-    errors.push(`Pack missing valid "id": ${JSON.stringify(pack)}`);
-    continue;
-  }
+for (const [id, pack] of Object.entries(master.packs)) {
   if (!pack.name || typeof pack.name !== 'string') {
-    errors.push(`Pack "${pack.id}" missing valid "name"`);
+    errors.push(`Pack "${id}" must have a "name" string`);
   }
   if (!Array.isArray(pack.cat) || pack.cat.length === 0) {
-    errors.push(`Pack "${pack.id}" must have at least one category in "cat"`);
-  }
-  if (!Array.isArray(pack.regions) || pack.regions.length === 0) {
-    errors.push(`Pack "${pack.id}" must have at least one entry in "regions"`);
-  }
-
-  // Validate category IDs exist
-  if (Array.isArray(pack.cat)) {
+    errors.push(`Pack "${id}" must have at least one category in "cat"`);
+  } else {
     for (const cat of pack.cat) {
       if (!catIds.has(cat)) {
-        errors.push(`Unknown category "${cat}" in pack "${pack.id}"`);
+        errors.push(`Pack "${id}" references unknown category "${cat}"`);
+      }
+    }
+  }
+  if (pack.hidden !== undefined && !Array.isArray(pack.hidden)) {
+    errors.push(`Pack "${id}" "hidden" must be an array (or omit it)`);
+  }
+}
+
+// ─── Step 4: Validate countries + same_as pointers ─────────────────────
+if (!master.countries._default) {
+  errors.push('"countries._default" is required as fallback');
+}
+
+// Resolve same_as with circular detection
+function resolveCountry(code, visited = new Set()) {
+  const entry = master.countries[code];
+  if (!entry) return null;
+  if (!entry.same_as) return entry;
+
+  if (visited.has(code)) {
+    errors.push(`Circular same_as detected: ${[...visited, code].join(' → ')}`);
+    return null;
+  }
+  visited.add(code);
+
+  const target = master.countries[entry.same_as];
+  if (!target) {
+    errors.push(`Country "${code}" same_as "${entry.same_as}" — target not found`);
+    return null;
+  }
+  return resolveCountry(entry.same_as, visited);
+}
+
+for (const [code, entry] of Object.entries(master.countries)) {
+  if (entry.same_as) {
+    // Validate same_as target exists
+    resolveCountry(code);
+    continue;
+  }
+
+  // Full country entry — validate fields
+  if (!Array.isArray(entry.categories) || entry.categories.length === 0) {
+    errors.push(`Country "${code}" must have a non-empty "categories" array`);
+  } else {
+    for (const cat of entry.categories) {
+      if (!catIds.has(cat)) {
+        errors.push(`Country "${code}" references unknown category "${cat}"`);
       }
     }
   }
 
-  // Validate region references
-  if (Array.isArray(pack.regions)) {
-    for (const r of pack.regions) {
-      if (r !== '*' && r !== '_default' && !regionCodes.has(r) && !zoneIds.has(r)) {
-        errors.push(`Unknown region/zone "${r}" in pack "${pack.id}"`);
+  if (!Array.isArray(entry.packs) || entry.packs.length === 0) {
+    errors.push(`Country "${code}" must have a non-empty "packs" array`);
+  } else {
+    for (const packId of entry.packs) {
+      if (!packIds.has(packId)) {
+        errors.push(`Country "${code}" references unknown pack "${packId}"`);
       }
     }
   }
+}
 
-  // Validate folder exists
-  const packPath = path.join(PACKS_DIR, pack.id);
+// ─── Step 5: Scan pack folders ─────────────────────────────────────────
+const packStickers = {}; // packId → [sorted sticker filenames]
+
+for (const [id, pack] of Object.entries(master.packs)) {
+  const packPath = path.join(PACKS_DIR, id);
   if (!fs.existsSync(packPath)) {
-    errors.push(`Missing folder: packs/${pack.id}/`);
+    errors.push(`Missing folder: packs/${id}/`);
     continue;
   }
 
-  // Validate tray icon
-  if (!fs.existsSync(path.join(packPath, 'tray_icon.webp'))) {
-    errors.push(`Missing tray_icon.webp in packs/${pack.id}/`);
-  }
-
-  // Count stickers
   const allFiles = fs.readdirSync(packPath);
-  const stickerFiles = allFiles.filter(
-    f => f !== 'tray_icon.webp' && f.endsWith('.webp')
-  );
-  const stickerCount = stickerFiles.length;
+  const hidden = new Set(pack.hidden || []);
 
-  if (stickerCount === 0) {
-    errors.push(`No stickers in packs/${pack.id}/`);
+  // All .webp files except tray_icon
+  const stickerFiles = allFiles
+    .filter(f => f.endsWith('.webp') && f !== 'tray_icon.webp' && !hidden.has(f))
+    .sort((a, b) => {
+      // Numeric sort: 1.webp, 2.webp, ... 10.webp
+      const numA = parseInt(a, 10);
+      const numB = parseInt(b, 10);
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+      return a.localeCompare(b);
+    });
+
+  if (stickerFiles.length === 0) {
+    errors.push(`No visible stickers in packs/${id}/ (${hidden.size} hidden)`);
     continue;
   }
 
-  if (stickerCount > MAX_STICKERS) {
-    errors.push(
-      `Too many stickers in packs/${pack.id}/ (${stickerCount}, max ${MAX_STICKERS})`
-    );
+  if (stickerFiles.length > MAX_STICKERS) {
+    errors.push(`Too many stickers in packs/${id}/ (${stickerFiles.length}, max ${MAX_STICKERS})`);
   }
 
-  // Validate sequential naming: 1.webp, 2.webp, ...
-  for (let i = 1; i <= stickerCount; i++) {
-    if (!fs.existsSync(path.join(packPath, `${i}.webp`))) {
-      errors.push(`Missing ${i}.webp in packs/${pack.id}/ (gap in sequence)`);
+  // Validate hidden entries reference real files
+  for (const h of hidden) {
+    if (!allFiles.includes(h)) {
+      warnings.push(`Pack "${id}" hides "${h}" but file doesn't exist`);
     }
   }
 
-  // Warn about extra non-webp files
+  // Warn about non-webp files
   const nonWebp = allFiles.filter(
     f => !f.endsWith('.webp') && f !== '.DS_Store' && f !== 'Thumbs.db'
   );
   if (nonWebp.length > 0) {
-    warnings.push(
-      `Unexpected files in packs/${pack.id}/: ${nonWebp.join(', ')}`
-    );
+    warnings.push(`Unexpected files in packs/${id}/: ${nonWebp.join(', ')}`);
   }
 
-  packCounts[pack.id] = stickerCount;
+  packStickers[id] = stickerFiles;
 }
 
 // ─── Abort on errors ───────────────────────────────────────────────────
@@ -203,54 +221,72 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-// ─── Step 2: Build target list ─────────────────────────────────────────
-const targets = [
-  ...master.regions.map(code => ({ id: code, type: 'region' })),
-  ...master.zones.map(z => ({ id: z.id, type: 'zone' })),
-  { id: '_default', type: 'default' }
-];
+// ─── Step 6: Clean old output ──────────────────────────────────────────
+// Remove old regions/ folder if it exists (v1 artifact)
+const OLD_REGIONS_DIR = path.join(CDN_DIR, 'regions');
+if (fs.existsSync(OLD_REGIONS_DIR)) {
+  fs.rmSync(OLD_REGIONS_DIR, { recursive: true, force: true });
+  console.log('  🗑️  Removed old regions/ folder (v1 artifact)');
+}
 
-// ─── Step 3: Generate region/zone JSON files ───────────────────────────
-for (const target of targets) {
-  const filtered = master.packs
-    .filter(p => p.regions.includes(target.id) || p.regions.includes('*'))
-    .filter(p => packCounts[p.id] > 0)
-    .map(p => ({
-      id: p.id,
-      name: p.name,
-      cat: p.cat,
-      count: packCounts[p.id]
-    }));
+// Create or clean countries/ folder
+if (fs.existsSync(COUNTRIES_DIR)) {
+  for (const f of fs.readdirSync(COUNTRIES_DIR)) {
+    fs.unlinkSync(path.join(COUNTRIES_DIR, f));
+  }
+} else {
+  fs.mkdirSync(COUNTRIES_DIR, { recursive: true });
+}
 
-  const regionData = {
+// ─── Step 7: Generate country JSON files ───────────────────────────────
+const countryCodes = Object.keys(master.countries);
+let filesGenerated = 0;
+
+for (const code of countryCodes) {
+  const config = resolveCountry(code);
+  if (!config) continue; // Error already logged
+
+  // Build categories array (preserves order from country definition)
+  const categories = config.categories
+    .filter(catId => catIds.has(catId))
+    .map(catId => ({ id: catId, name: master.categories[catId] }));
+
+  // Build packs array (preserves order from country definition)
+  const packs = config.packs
+    .filter(packId => packStickers[packId]) // only packs with stickers
+    .map(packId => {
+      const pack = master.packs[packId];
+      const stickers = packStickers[packId];
+      return {
+        id: packId,
+        name: pack.name,
+        cat: pack.cat,
+        count: stickers.length,
+        tray: stickers[0], // first sticker as tray icon
+        stickers
+      };
+    });
+
+  const output = {
     v: master.v,
-    packs: filtered
+    baseUrl: master.baseUrl,
+    country: code,
+    categories,
+    packs
   };
 
   fs.writeFileSync(
-    path.join(REGIONS_DIR, `${target.id}.json`),
-    JSON.stringify(regionData, null, 2)
+    path.join(COUNTRIES_DIR, `${code}.json`),
+    JSON.stringify(output, null, 2)
   );
+  filesGenerated++;
 }
 
-// ─── Step 4: Generate index.json ───────────────────────────────────────
-const regionsMap = {};
-master.regions.forEach(code => {
-  regionsMap[code] = master.v;
-});
-
-const zonesMap = {};
-master.zones.forEach(z => {
-  zonesMap[z.id] = { v: master.v, countries: z.countries };
-});
-
+// ─── Step 8: Generate index.json ───────────────────────────────────────
 const indexData = {
   v: master.v,
   baseUrl: master.baseUrl,
-  categories: master.categories,
-  regions: regionsMap,
-  zones: zonesMap,
-  defaultRegion: '_default'
+  countries: countryCodes.filter(c => c !== '_default')
 };
 
 fs.writeFileSync(
@@ -259,16 +295,16 @@ fs.writeFileSync(
 );
 
 // ─── Summary ───────────────────────────────────────────────────────────
-const regionCount = master.regions.length;
-const zoneCount = master.zones.length;
-const totalTargets = targets.length;
+const mainCountries = countryCodes.filter(c => c !== '_default' && !master.countries[c].same_as);
+const aliasCountries = countryCodes.filter(c => master.countries[c].same_as);
+const totalStickers = Object.values(packStickers).reduce((sum, arr) => sum + arr.length, 0);
 
 console.log(`\n✅ v${master.v} generated successfully!\n`);
-console.log(`  📁 ${totalTargets} region/zone files created:`);
-console.log(`     • ${regionCount} regions: ${master.regions.join(', ')}`);
-console.log(`     • ${zoneCount} zones: ${master.zones.map(z => z.id).join(', ')}`);
-console.log(`     • 1 default fallback`);
-console.log(`  📦 ${master.packs.length} packs validated (${Object.values(packCounts).reduce((a, b) => a + b, 0)} total stickers)`);
+console.log(`  🌍 ${filesGenerated} country files created:`);
+console.log(`     • ${mainCountries.length} main: ${mainCountries.join(', ')}`);
+console.log(`     • ${aliasCountries.length} aliases (same_as): ${aliasCountries.join(', ')}`);
+console.log(`     • 1 _default fallback`);
+console.log(`  📦 ${packIds.size} packs validated (${totalStickers} visible stickers)`);
 console.log(`  📄 index.json created`);
 console.log(`  🌐 Base URL: ${master.baseUrl}`);
 console.log('');

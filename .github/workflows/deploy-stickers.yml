@@ -41,8 +41,8 @@ jobs:
           echo "=== index.json ==="
           cat sticker-cdn/index.json | head -30
           echo ""
-          echo "=== Region files ==="
-          ls -la sticker-cdn/regions/
+          echo "=== Country files ==="
+          ls -la sticker-cdn/countries/
           echo ""
           echo "=== Pack folders ==="
           ls -la sticker-cdn/packs/
