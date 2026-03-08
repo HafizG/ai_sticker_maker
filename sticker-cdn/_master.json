@@ -15,79 +15,40 @@
   },
 
   "packs": {
-    "pk-funny-urdu":       { "name": "Funny Urdu Stickers",  "cat": ["funny"],                "hidden": [] },
-    "pk-cricket-fans":     { "name": "Cricket Fans PK",      "cat": ["sports"],               "hidden": [] },
-    "pk-ramadan-memes":    { "name": "Funny Ramadan Memes",  "cat": ["funny", "religious"],   "hidden": [] },
-    "sa-arabic-greetings": { "name": "Arabic Greetings",     "cat": ["greetings"],            "hidden": [] },
-    "arab-ramadan-eid":    { "name": "Ramadan & Eid",        "cat": ["religious", "festivals"],"hidden": [] },
     "global-emoji-remix":  { "name": "Emoji Remix",          "cat": ["funny", "emotions"],    "hidden": [] },
     "global-reactions":    { "name": "Reaction Stickers",    "cat": ["funny"],                "hidden": [] },
-    "global-love-hearts":  { "name": "Love & Hearts",        "cat": ["love"],                 "hidden": [] },
-    "extra-vintage-pack":  { "name": "Vintage Collection",   "cat": ["extra"],                "hidden": [] },
-    "extra-pk-independence":{ "name": "14 August Special",   "cat": ["extra"],                "hidden": [] },
-    "extra-sa-national-day":{ "name": "Saudi National Day",  "cat": ["extra"],                "hidden": [] }
+    "global-love-hearts":  { "name": "Love & Hearts",        "cat": ["love"],                 "hidden": [] }
   },
 
   "countries": {
 
     "_default": {
-      "categories": ["funny", "greetings", "emotions", "love", "trending"],
-      "packs": ["global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack"]
+      "categories": ["funny", "emotions", "love"],
+      "packs": ["global-emoji-remix", "global-reactions", "global-love-hearts"]
     },
 
-    "PK": {
-      "categories": ["funny", "greetings", "sports", "emotions", "religious", "festivals", "love", "trending", "extra"],
-      "packs": ["pk-funny-urdu", "pk-cricket-fans", "pk-ramadan-memes", "arab-ramadan-eid", "global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack", "extra-pk-independence"]
-    },
+    "PK": { "same_as": "_default" },
+    "IN": { "same_as": "_default" },
+    "SA": { "same_as": "_default" },
+    "AE": { "same_as": "_default" },
+    "ID": { "same_as": "_default" },
+    "BD": { "same_as": "_default" },
+    "TR": { "same_as": "_default" },
+    "EG": { "same_as": "_default" },
 
-    "IN": {
-      "categories": ["funny", "greetings", "sports", "emotions", "religious", "festivals", "love", "trending"],
-      "packs": ["arab-ramadan-eid", "global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack"]
-    },
+    "LB": { "same_as": "_default" },
+    "SY": { "same_as": "_default" },
+    "LY": { "same_as": "_default" },
+    "SD": { "same_as": "_default" },
+    "YE": { "same_as": "_default" },
+    "PS": { "same_as": "_default" },
+    "MR": { "same_as": "_default" },
 
-    "SA": {
-      "categories": ["funny", "greetings", "emotions", "religious", "festivals", "love", "trending", "extra"],
-      "packs": ["sa-arabic-greetings", "arab-ramadan-eid", "global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack", "extra-sa-national-day"]
-    },
-
-    "AE": {
-      "categories": ["funny", "greetings", "emotions", "religious", "festivals", "love", "trending"],
-      "packs": ["sa-arabic-greetings", "arab-ramadan-eid", "global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack"]
-    },
-
-    "ID": {
-      "categories": ["funny", "greetings", "emotions", "religious", "festivals", "love", "trending"],
-      "packs": ["arab-ramadan-eid", "global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack"]
-    },
-
-    "BD": {
-      "categories": ["funny", "greetings", "emotions", "religious", "festivals", "love", "trending"],
-      "packs": ["arab-ramadan-eid", "global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack"]
-    },
-
-    "TR": {
-      "categories": ["funny", "greetings", "emotions", "religious", "love", "trending"],
-      "packs": ["arab-ramadan-eid", "global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack"]
-    },
-
-    "EG": {
-      "categories": ["funny", "greetings", "emotions", "religious", "festivals", "love", "trending"],
-      "packs": ["sa-arabic-greetings", "arab-ramadan-eid", "global-emoji-remix", "global-reactions", "global-love-hearts", "extra-vintage-pack"]
-    },
-
-    "LB": { "same_as": "AE" },
-    "SY": { "same_as": "AE" },
-    "LY": { "same_as": "AE" },
-    "SD": { "same_as": "AE" },
-    "YE": { "same_as": "AE" },
-    "PS": { "same_as": "AE" },
-    "MR": { "same_as": "AE" },
-
-    "LK": { "same_as": "BD" },
-    "NP": { "same_as": "BD" },
-    "AF": { "same_as": "BD" },
-    "MV": { "same_as": "BD" },
-    "MM": { "same_as": "BD" },
+    "LK": { "same_as": "_default" },
+    "NP": { "same_as": "_default" },
+    "AF": { "same_as": "_default" },
+    "MV": { "same_as": "_default" },
+    "MM": { "same_as": "_default" },
 
     "TH": { "same_as": "_default" },
     "VN": { "same_as": "_default" },

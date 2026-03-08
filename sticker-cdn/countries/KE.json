@@ -8,20 +8,12 @@
       "name": "Funny"
     },
     {
-      "id": "greetings",
-      "name": "Greetings"
-    },
-    {
       "id": "emotions",
       "name": "Emotions"
     },
     {
       "id": "love",
       "name": "Love"
-    },
-    {
-      "id": "trending",
-      "name": "Trending"
     }
   ],
   "packs": [
@@ -102,27 +94,6 @@
         "10.webp",
         "11.webp",
         "12.webp"
-      ]
-    },
-    {
-      "id": "extra-vintage-pack",
-      "name": "Vintage Collection",
-      "cat": [
-        "extra"
-      ],
-      "count": 10,
-      "tray": "1.webp",
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp",
-        "9.webp",
-        "10.webp"
       ]
     }
   ]
