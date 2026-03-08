@@ -159,6 +159,7 @@ for (const [code, entry] of Object.entries(master.countries)) {
 
 // ─── Step 5: Scan pack folders ─────────────────────────────────────────
 const packStickers = {}; // packId → [sorted sticker filenames]
+const packTrayIcons = {}; // packId → tray icon filename or null
 
 for (const [id, pack] of Object.entries(master.packs)) {
   const packPath = path.join(PACKS_DIR, id);
@@ -197,15 +198,21 @@ for (const [id, pack] of Object.entries(master.packs)) {
     }
   }
 
-  // Warn about non-webp files
+  // Check for tray icon
+  const hasTrayIcon = allFiles.includes('tray_icon.png') || allFiles.includes('tray_icon.webp');
+
+  // Warn about non-webp files (exclude known tray icon)
   const nonWebp = allFiles.filter(
-    f => !f.endsWith('.webp') && f !== '.DS_Store' && f !== 'Thumbs.db'
+    f => !f.endsWith('.webp') && f !== '.DS_Store' && f !== 'Thumbs.db' && f !== 'tray_icon.png'
   );
   if (nonWebp.length > 0) {
     warnings.push(`Unexpected files in packs/${id}/: ${nonWebp.join(', ')}`);
   }
 
   packStickers[id] = stickerFiles;
+  packTrayIcons[id] = hasTrayIcon
+    ? (allFiles.includes('tray_icon.png') ? 'tray_icon.png' : 'tray_icon.webp')
+    : null;
 }
 
 // ─── Abort on errors ───────────────────────────────────────────────────
@@ -262,7 +269,7 @@ for (const code of countryCodes) {
         name: pack.name,
         cat: pack.cat,
         count: stickers.length,
-        tray: stickers[0], // first sticker as tray icon
+        tray: packTrayIcons[packId] || stickers[0], // dedicated tray icon or first sticker
         stickers
       };
     });
