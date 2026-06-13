@@ -1,5 +1,5 @@
 {
-  "v": 2,
+  "v": 3,
   "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
   "country": "ES",
   "categories": [
@@ -26,6 +26,7 @@
       ],
       "count": 17,
       "tray": "tray_icon.png",
+      "animated_sticker_pack": true,
       "stickers": [
         "1.webp",
         "2.webp",
@@ -54,6 +55,7 @@
       ],
       "count": 17,
       "tray": "tray_icon.png",
+      "animated_sticker_pack": true,
       "stickers": [
         "1.webp",
         "2.webp",
@@ -82,6 +84,7 @@
       ],
       "count": 30,
       "tray": "tray_icon.png",
+      "animated_sticker_pack": true,
       "stickers": [
         "1.webp",
         "2.webp",

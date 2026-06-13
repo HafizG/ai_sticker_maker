@@ -54,7 +54,12 @@ mkdir sticker-cdn/packs/my-new-pack
 # Add: 1.webp, 2.webp, ... (max 30)
 
 # 2. Register in _master.json → packs
-"my-new-pack": { "name": "My New Pack", "cat": ["funny"], "hidden": [] }
+"my-new-pack": {
+  "name": "My New Pack",
+  "cat": ["funny"],
+  "hidden": [],
+  "animated_sticker_pack": true
+}
 
 # 3. Add pack ID to relevant countries
 "PK": { "categories": [...], "packs": [..., "my-new-pack"] }
@@ -143,6 +148,7 @@ CI automatically: validates → generates country JSONs → deploys to GitHub Pa
 | Unknown category in country | ❌ Deploy blocked |
 | Circular `same_as` pointer | ❌ Deploy blocked |
 | Missing `_default` country | ❌ Deploy blocked |
+| `animated_sticker_pack` is not boolean | ❌ Deploy blocked |
 | Hidden file doesn't exist | ⚠️ Warning |
 
 ---
@@ -210,7 +216,8 @@ node scripts/create-dummy-webps.js
     "pk-funny-urdu": {
       "name": "Funny Urdu Stickers",      // ← display name
       "cat": ["funny"],                   // ← 1+ category IDs
-      "hidden": ["5.webp"]               // ← hide specific stickers (or [])
+      "hidden": ["5.webp"],              // ← hide specific stickers (or [])
+      "animated_sticker_pack": true       // ← true for animated WebP packs
     }
   },
 

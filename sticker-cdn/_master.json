@@ -1,5 +1,5 @@
 {
-  "v": 2,
+  "v": 3,
   "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
 
   "categories": {
@@ -15,9 +15,9 @@
   },
 
   "packs": {
-    "global-emoji-remix":  { "name": "Emoji Remix",          "cat": ["funny", "emotions"],    "hidden": [] },
-    "global-reactions":    { "name": "Reaction Stickers",    "cat": ["funny"],                "hidden": [] },
-    "global-love-hearts":  { "name": "Love & Hearts",        "cat": ["love"],                 "hidden": [] }
+    "global-emoji-remix":  { "name": "Emoji Remix",          "cat": ["funny", "emotions"],    "hidden": [], "animated_sticker_pack": true },
+    "global-reactions":    { "name": "Reaction Stickers",    "cat": ["funny"],                "hidden": [], "animated_sticker_pack": true },
+    "global-love-hearts":  { "name": "Love & Hearts",        "cat": ["love"],                 "hidden": [], "animated_sticker_pack": true }
   },
 
   "countries": {

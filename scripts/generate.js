@@ -101,6 +101,9 @@ for (const [id, pack] of Object.entries(master.packs)) {
   if (pack.hidden !== undefined && !Array.isArray(pack.hidden)) {
     errors.push(`Pack "${id}" "hidden" must be an array (or omit it)`);
   }
+  if (pack.animated_sticker_pack !== undefined && typeof pack.animated_sticker_pack !== 'boolean') {
+    errors.push(`Pack "${id}" "animated_sticker_pack" must be a boolean (or omit it)`);
+  }
 }
 
 // ─── Step 4: Validate countries + same_as pointers ─────────────────────
@@ -270,6 +273,7 @@ for (const code of countryCodes) {
         cat: pack.cat,
         count: stickers.length,
         tray: packTrayIcons[packId] || stickers[0], // dedicated tray icon or first sticker
+        animated_sticker_pack: pack.animated_sticker_pack === true,
         stickers
       };
     });
