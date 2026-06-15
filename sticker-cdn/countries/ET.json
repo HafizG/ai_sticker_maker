@@ -1,5 +1,5 @@
 {
-  "v": 3,
+  "v": 4,
   "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
   "country": "ET",
   "categories": [
@@ -14,6 +14,10 @@
     {
       "id": "love",
       "name": "Love"
+    },
+    {
+      "id": "sports",
+      "name": "Sports"
     }
   ],
   "packs": [
@@ -116,6 +120,64 @@
         "28.webp",
         "29.webp",
         "30.webp"
+      ]
+    },
+    {
+      "id": "global-football-bg",
+      "name": "Football Backgrounds",
+      "cat": [
+        "sports"
+      ],
+      "count": 16,
+      "tray": "batch_sticker_1781528131810_3.webp",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "batch_sticker_1781528131810_3.webp",
+        "batch_sticker_1781528131876_1.webp",
+        "batch_sticker_1781528131979_16.webp",
+        "batch_sticker_1781528131998_13.webp",
+        "batch_sticker_1781528132032_14.webp",
+        "batch_sticker_1781528132105_7.webp",
+        "batch_sticker_1781528132105_9.webp",
+        "batch_sticker_1781528132142_17.webp",
+        "batch_sticker_1781528132155_5.webp",
+        "batch_sticker_1781528132228_15.webp",
+        "batch_sticker_1781528132301_8.webp",
+        "batch_sticker_1781528132307_2.webp",
+        "batch_sticker_1781528132557_4.webp",
+        "batch_sticker_1781528132639_10.webp",
+        "batch_sticker_1781528132686_6.webp",
+        "batch_sticker_1781528132750_11.webp"
+      ]
+    },
+    {
+      "id": "global-football-kicks",
+      "name": "Football Kicks",
+      "cat": [
+        "sports"
+      ],
+      "count": 18,
+      "tray": "batch_sticker_1781528132440_12.webp",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "batch_sticker_1781528132440_12.webp",
+        "batch_sticker_1781528178521_13.webp",
+        "batch_sticker_1781528180411_2.webp",
+        "batch_sticker_1781528182542_3.webp",
+        "batch_sticker_1781528184714_16.webp",
+        "batch_sticker_1781528186878_14.webp",
+        "batch_sticker_1781528190001_1.webp",
+        "batch_sticker_1781528194128_17.webp",
+        "batch_sticker_1781528198519_15.webp",
+        "batch_sticker_1781528200986_10.webp",
+        "batch_sticker_1781528203521_11.webp",
+        "batch_sticker_1781528206070_7.webp",
+        "batch_sticker_1781528209847_12.webp",
+        "batch_sticker_1781528213893_8.webp",
+        "batch_sticker_1781528217288_5.webp",
+        "batch_sticker_1781528220581_6.webp",
+        "batch_sticker_1781528223952_4.webp",
+        "batch_sticker_1781528227345_9.webp"
       ]
     }
   ]

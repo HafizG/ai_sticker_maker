@@ -1,5 +1,5 @@
 {
-  "v": 3,
+  "v": 4,
   "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
 
   "categories": {
@@ -15,16 +15,18 @@
   },
 
   "packs": {
-    "global-emoji-remix":  { "name": "Emoji Remix",          "cat": ["funny", "emotions"],    "hidden": [], "animated_sticker_pack": true },
-    "global-reactions":    { "name": "Reaction Stickers",    "cat": ["funny"],                "hidden": [], "animated_sticker_pack": true },
-    "global-love-hearts":  { "name": "Love & Hearts",        "cat": ["love"],                 "hidden": [], "animated_sticker_pack": true }
+    "global-emoji-remix":    { "name": "Emoji Remix",             "cat": ["funny", "emotions"],    "hidden": [], "animated_sticker_pack": true },
+    "global-reactions":      { "name": "Reaction Stickers",       "cat": ["funny"],                "hidden": [], "animated_sticker_pack": true },
+    "global-love-hearts":    { "name": "Love & Hearts",           "cat": ["love"],                 "hidden": [], "animated_sticker_pack": true },
+    "global-football-bg":    { "name": "Football Backgrounds",    "cat": ["sports"],               "hidden": [], "animated_sticker_pack": false },
+    "global-football-kicks": { "name": "Football Kicks",          "cat": ["sports"],               "hidden": [], "animated_sticker_pack": false }
   },
 
   "countries": {
 
     "_default": {
-      "categories": ["funny", "emotions", "love"],
-      "packs": ["global-emoji-remix", "global-reactions", "global-love-hearts"]
+      "categories": ["funny", "emotions", "love", "sports"],
+      "packs": ["global-emoji-remix", "global-reactions", "global-love-hearts", "global-football-bg", "global-football-kicks"]
     },
 
     "PK": { "same_as": "_default" },
