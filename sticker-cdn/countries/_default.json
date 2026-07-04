@@ -30,7 +30,7 @@
       ],
       "count": 17,
       "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
+      "animated_sticker_pack": false,
       "stickers": [
         "1.webp",
         "2.webp",
@@ -59,7 +59,7 @@
       ],
       "count": 17,
       "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
+      "animated_sticker_pack": false,
       "stickers": [
         "1.webp",
         "2.webp",
