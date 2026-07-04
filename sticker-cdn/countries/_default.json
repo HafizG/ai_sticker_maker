@@ -1,5 +1,5 @@
 {
-  "v": 4,
+  "v": 5,
   "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
   "country": "_default",
   "categories": [
@@ -23,7 +23,7 @@
   "packs": [
     {
       "id": "global-emoji-remix",
-      "name": "Emoji Remix",
+      "name": "Funny Faces Reactions",
       "cat": [
         "funny",
         "emotions"
@@ -82,7 +82,7 @@
     },
     {
       "id": "global-love-hearts",
-      "name": "Love & Hearts",
+      "name": "Animated Faces Reactions",
       "cat": [
         "love"
       ],

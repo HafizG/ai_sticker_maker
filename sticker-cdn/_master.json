@@ -1,5 +1,5 @@
 {
-  "v": 4,
+  "v": 5,
   "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
 
   "categories": {
@@ -15,9 +15,9 @@
   },
 
   "packs": {
-    "global-emoji-remix":    { "name": "Emoji Remix",             "cat": ["funny", "emotions"],    "hidden": [], "animated_sticker_pack": true },
-    "global-reactions":      { "name": "Reaction Stickers",       "cat": ["funny"],                "hidden": [], "animated_sticker_pack": true },
-    "global-love-hearts":    { "name": "Love & Hearts",           "cat": ["love"],                 "hidden": [], "animated_sticker_pack": true },
+    "global-emoji-remix":    { "name": "Funny Faces Reactions",   "cat": ["funny", "emotions"],    "hidden": [], "animated_sticker_pack": false },
+    "global-reactions":      { "name": "Reaction Stickers",       "cat": ["funny"],                "hidden": [], "animated_sticker_pack": false },
+    "global-love-hearts":    { "name": "Animated Faces Reactions", "cat": ["love"],                 "hidden": [], "animated_sticker_pack": true },
     "global-football-bg":    { "name": "Football Backgrounds",    "cat": ["sports"],               "hidden": [], "animated_sticker_pack": false },
     "global-football-kicks": { "name": "Football Kicks",          "cat": ["sports"],               "hidden": [], "animated_sticker_pack": false }
   },
