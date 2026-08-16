@@ -4,83 +4,41 @@
   "country": "BR",
   "categories": [
     {
-      "id": "funny",
-      "name": "Funny"
-    },
-    {
-      "id": "trending",
-      "name": "Trending"
-    },
-    {
       "id": "love",
       "name": "Love"
     },
     {
-      "id": "sports",
-      "name": "Sports"
+      "id": "funny",
+      "name": "Funny"
     },
     {
       "id": "emotions",
       "name": "Emotions"
     },
     {
-      "id": "festivals",
-      "name": "Festivals"
+      "id": "trending",
+      "name": "Trending"
+    },
+    {
+      "id": "sports",
+      "name": "Sports"
     },
     {
       "id": "greetings",
       "name": "Greetings"
+    },
+    {
+      "id": "festivals",
+      "name": "Festivals"
     }
   ],
   "packs": [
     {
-      "id": "br-bandeira-nacional",
-      "name": "Bandeiras do Brasil 🇧🇷",
+      "id": "br-figurinhas-hot",
+      "name": "Figurinhas Quentes & Sexy 🔥",
       "cat": [
-        "festivals",
-        "trending"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-bandeira-animada",
-      "name": "Bandeira do Brasil Animada 🇧🇷",
-      "cat": [
-        "festivals",
-        "trending"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-bolsonaro-dancando",
-      "name": "Bolsonaro Dançando & Memes",
-      "cat": [
-        "funny",
-        "trending"
+        "love",
+        "emotions"
       ],
       "count": 8,
       "tray": "tray_icon.png",
@@ -139,8 +97,28 @@
       ]
     },
     {
-      "id": "br-figurinhas-hot",
-      "name": "Figurinhas Quentes & Sexy 🔥",
+      "id": "br-casal-fofo",
+      "name": "Casal Fofo & Romântico ❤️",
+      "cat": [
+        "love"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": true,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-coracao-paixao",
+      "name": "Corações & Paixão Animados 💖",
       "cat": [
         "love",
         "emotions"
@@ -148,6 +126,109 @@
       "count": 8,
       "tray": "tray_icon.png",
       "animated_sticker_pack": true,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-gretchen-rainha",
+      "name": "Gretchen Rainha dos Memes 👑",
+      "cat": [
+        "funny",
+        "trending"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": true,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-memes-classicos",
+      "name": "Memes Clássicos Brasileiros",
+      "cat": [
+        "funny"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-bolsonaro-dancando",
+      "name": "Bolsonaro Dançando & Memes",
+      "cat": [
+        "funny",
+        "trending"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": true,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-vira-lata-caramelo",
+      "name": "Vira-lata Caramelo 🐕",
+      "cat": [
+        "funny",
+        "emotions"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-zoeira-amigos",
+      "name": "Zoeira & Resenha com Amigos 😂",
+      "cat": [
+        "funny"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
       "stickers": [
         "1.webp",
         "2.webp",
@@ -202,35 +283,14 @@
       ]
     },
     {
-      "id": "br-memes-classicos",
-      "name": "Memes Clássicos Brasileiros",
+      "id": "br-bom-dia-boa-noite",
+      "name": "Bom Dia & Boa Noite com Fé 🙏",
       "cat": [
-        "funny"
+        "greetings"
       ],
       "count": 8,
       "tray": "tray_icon.png",
       "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-gretchen-rainha",
-      "name": "Gretchen Rainha dos Memes 👑",
-      "cat": [
-        "funny",
-        "trending"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
       "stickers": [
         "1.webp",
         "2.webp",
@@ -263,31 +323,10 @@
       ]
     },
     {
-      "id": "br-bom-dia-boa-noite",
-      "name": "Bom Dia & Boa Noite com Fé 🙏",
+      "id": "br-lula-reacoes",
+      "name": "Lula & Política Reações",
       "cat": [
-        "greetings"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-vira-lata-caramelo",
-      "name": "Vira-lata Caramelo 🐕",
-      "cat": [
-        "funny",
-        "emotions"
+        "funny"
       ],
       "count": 8,
       "tray": "tray_icon.png",
@@ -325,67 +364,6 @@
       ]
     },
     {
-      "id": "br-girias-brasileiras",
-      "name": "Gírias do Brasil (Eita, Vixi)",
-      "cat": [
-        "emotions",
-        "funny"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-casal-fofo",
-      "name": "Casal Fofo & Romântico ❤️",
-      "cat": [
-        "love"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-zoeira-amigos",
-      "name": "Zoeira & Resenha com Amigos 😂",
-      "cat": [
-        "funny"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
       "id": "br-passinho-funk",
       "name": "Dança & Passinho do Funk 🎵",
       "cat": [
@@ -407,9 +385,10 @@
       ]
     },
     {
-      "id": "br-lula-reacoes",
-      "name": "Lula & Política Reações",
+      "id": "br-girias-brasileiras",
+      "name": "Gírias do Brasil (Eita, Vixi)",
       "cat": [
+        "emotions",
         "funny"
       ],
       "count": 8,
@@ -427,15 +406,36 @@
       ]
     },
     {
-      "id": "br-coracao-paixao",
-      "name": "Corações & Paixão Animados 💖",
+      "id": "br-bandeira-animada",
+      "name": "Bandeira do Brasil Animada 🇧🇷",
       "cat": [
-        "love",
-        "emotions"
+        "festivals",
+        "trending"
       ],
       "count": 8,
       "tray": "tray_icon.png",
       "animated_sticker_pack": true,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-bandeira-nacional",
+      "name": "Bandeiras do Brasil 🇧🇷",
+      "cat": [
+        "festivals",
+        "trending"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
       "stickers": [
         "1.webp",
         "2.webp",
