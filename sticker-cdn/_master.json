@@ -1,6 +1,6 @@
 {
-  "v": 5,
-  "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
+  "v": 6,
+  "baseUrl": "https://raw.githubusercontent.com/HafizG/ai_sticker_maker/dev/sticker-cdn",
 
   "categories": {
     "funny":     "Funny",
@@ -15,11 +15,32 @@
   },
 
   "packs": {
-    "global-emoji-remix":    { "name": "Funny Faces Reactions",   "cat": ["funny", "emotions"],    "hidden": [], "animated_sticker_pack": false },
-    "global-reactions":      { "name": "Reaction Stickers",       "cat": ["funny"],                "hidden": [], "animated_sticker_pack": false },
-    "global-love-hearts":    { "name": "Animated Faces Reactions", "cat": ["love"],                 "hidden": [], "animated_sticker_pack": true },
-    "global-football-bg":    { "name": "Football Backgrounds",    "cat": ["sports"],               "hidden": [], "animated_sticker_pack": false },
-    "global-football-kicks": { "name": "Football Kicks",          "cat": ["sports"],               "hidden": [], "animated_sticker_pack": false }
+    "global-emoji-remix":       { "name": "Funny Faces Reactions",             "cat": ["funny", "emotions"],    "hidden": [], "animated_sticker_pack": false },
+    "global-reactions":         { "name": "Reaction Stickers",                 "cat": ["funny"],                "hidden": [], "animated_sticker_pack": false },
+    "global-love-hearts":       { "name": "Animated Faces Reactions",          "cat": ["love"],                 "hidden": [], "animated_sticker_pack": true },
+    "global-football-bg":       { "name": "Football Backgrounds",              "cat": ["sports"],               "hidden": [], "animated_sticker_pack": false },
+    "global-football-kicks":    { "name": "Football Kicks",                    "cat": ["sports"],               "hidden": [], "animated_sticker_pack": false },
+
+    "br-bandeira-nacional":     { "name": "Bandeiras do Brasil 🇧🇷",           "cat": ["festivals", "trending"], "hidden": [], "animated_sticker_pack": false },
+    "br-bandeira-animada":      { "name": "Bandeira do Brasil Animada 🇧🇷",   "cat": ["festivals", "trending"], "hidden": [], "animated_sticker_pack": true },
+    "br-bolsonaro-dancando":    { "name": "Bolsonaro Dançando & Memes",        "cat": ["funny", "trending"],     "hidden": [], "animated_sticker_pack": true },
+    "br-beijo-apaixonado":      { "name": "Beijos Apaixonados 💋",            "cat": ["love", "emotions"],      "hidden": [], "animated_sticker_pack": true },
+    "br-abraco-carinhoso":      { "name": "Abraços & Carinho 🤗",             "cat": ["love", "emotions"],      "hidden": [], "animated_sticker_pack": true },
+    "br-figurinhas-hot":        { "name": "Figurinhas Quentes & Sexy 🔥",     "cat": ["love", "emotions"],      "hidden": [], "animated_sticker_pack": true },
+    "br-futebol-selecao":       { "name": "Seleção Brasileira & Futebol ⚽",   "cat": ["sports", "trending"],   "hidden": [], "animated_sticker_pack": false },
+    "br-futebol-gols-animados": { "name": "Golaços & Comemorações ⚽",        "cat": ["sports", "trending"],   "hidden": [], "animated_sticker_pack": true },
+    "br-memes-classicos":       { "name": "Memes Clássicos Brasileiros",       "cat": ["funny"],                "hidden": [], "animated_sticker_pack": false },
+    "br-gretchen-rainha":       { "name": "Gretchen Rainha dos Memes 👑",      "cat": ["funny", "trending"],     "hidden": [], "animated_sticker_pack": true },
+    "br-flork-debochado":       { "name": "Flork Debochado & Engraçado",       "cat": ["funny"],                "hidden": [], "animated_sticker_pack": false },
+    "br-bom-dia-boa-noite":     { "name": "Bom Dia & Boa Noite com Fé 🙏",     "cat": ["greetings"],            "hidden": [], "animated_sticker_pack": false },
+    "br-vira-lata-caramelo":    { "name": "Vira-lata Caramelo 🐕",             "cat": ["funny", "emotions"],     "hidden": [], "animated_sticker_pack": false },
+    "br-carnaval-samba":        { "name": "Carnaval & Ritmo de Samba 🎭",     "cat": ["festivals", "trending"], "hidden": [], "animated_sticker_pack": true },
+    "br-girias-brasileiras":    { "name": "Gírias do Brasil (Eita, Vixi)",     "cat": ["emotions", "funny"],     "hidden": [], "animated_sticker_pack": false },
+    "br-casal-fofo":            { "name": "Casal Fofo & Romântico ❤️",         "cat": ["love"],                  "hidden": [], "animated_sticker_pack": true },
+    "br-zoeira-amigos":         { "name": "Zoeira & Resenha com Amigos 😂",    "cat": ["funny"],                "hidden": [], "animated_sticker_pack": false },
+    "br-passinho-funk":         { "name": "Dança & Passinho do Funk 🎵",       "cat": ["trending", "festivals"], "hidden": [], "animated_sticker_pack": true },
+    "br-lula-reacoes":          { "name": "Lula & Política Reações",          "cat": ["funny"],                "hidden": [], "animated_sticker_pack": false },
+    "br-coracao-paixao":        { "name": "Corações & Paixão Animados 💖",     "cat": ["love", "emotions"],      "hidden": [], "animated_sticker_pack": true }
   },
 
   "countries": {
@@ -78,7 +99,31 @@
     "CA": { "same_as": "_default" },
     "AU": { "same_as": "_default" },
 
-    "BR": { "same_as": "_default" },
+    "BR": {
+      "categories": ["funny", "trending", "love", "sports", "emotions", "festivals", "greetings"],
+      "packs": [
+        "br-bandeira-nacional",
+        "br-bandeira-animada",
+        "br-bolsonaro-dancando",
+        "br-beijo-apaixonado",
+        "br-abraco-carinhoso",
+        "br-figurinhas-hot",
+        "br-futebol-selecao",
+        "br-futebol-gols-animados",
+        "br-memes-classicos",
+        "br-gretchen-rainha",
+        "br-flork-debochado",
+        "br-bom-dia-boa-noite",
+        "br-vira-lata-caramelo",
+        "br-carnaval-samba",
+        "br-girias-brasileiras",
+        "br-casal-fofo",
+        "br-zoeira-amigos",
+        "br-passinho-funk",
+        "br-lula-reacoes",
+        "br-coracao-paixao"
+      ]
+    },
     "MX": { "same_as": "_default" },
     "AR": { "same_as": "_default" },
     "CO": { "same_as": "_default" },

@@ -1,6 +1,6 @@
 {
-  "v": 5,
-  "baseUrl": "https://hafizg.github.io/ai_sticker_maker",
+  "v": 6,
+  "baseUrl": "https://raw.githubusercontent.com/HafizG/ai_sticker_maker/dev/sticker-cdn",
   "country": "BN",
   "categories": [
     {
