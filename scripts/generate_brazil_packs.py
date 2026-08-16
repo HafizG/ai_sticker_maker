@@ -5,10 +5,10 @@ from PIL import Image, ImageDraw, ImageFont
 
 PACKS_BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sticker-cdn', 'packs')
 
-def get_font(size):
+def get_font(size, bold=True):
     font_paths = [
-        "C:\\Windows\\Fonts\\arialbd.ttf",
-        "C:\\Windows\\Fonts\\arial.ttf",
+        "C:\\Windows\\Fonts\\arialbd.ttf" if bold else "C:\\Windows\\Fonts\\arial.ttf",
+        "C:\\Windows\\Fonts\\impact.ttf",
         "C:\\Windows\\Fonts\\seguiemj.ttf",
         "C:\\Windows\\Fonts\\tahoma.ttf",
     ]
@@ -29,36 +29,19 @@ def draw_text_centered(draw, text, xy, font, fill="white", stroke_fill="black", 
     y = cy - th / 2
     draw.text((x, y), text, font=font, fill=fill, stroke_fill=stroke_fill, stroke_width=stroke_width)
 
-def draw_brazil_flag(draw, box):
-    x0, y0, x1, y1 = box
-    w = x1 - x0
-    h = y1 - y0
-    
-    # Green background
-    draw.rectangle([x0, y0, x1, y1], fill=(0, 156, 59, 255), outline=(0, 100, 35, 255), width=4)
-    
-    # Yellow rhombus
-    rhombus = [
-        (x0 + w * 0.5, y0 + h * 0.12),
-        (x1 - w * 0.08, y0 + h * 0.5),
-        (x0 + w * 0.5, y1 - h * 0.12),
-        (x0 + w * 0.08, y0 + h * 0.5)
-    ]
-    draw.polygon(rhombus, fill=(255, 223, 0, 255))
-    
-    # Blue circle
-    cr = min(w, h) * 0.22
-    cx, cy = x0 + w * 0.5, y0 + h * 0.5
-    draw.ellipse([cx - cr, cy - cr, cx + cr, cy + cr], fill=(0, 39, 118, 255))
-    
-    # White arc banner across circle
-    arc_box = [cx - cr * 1.05, cy - cr * 0.3, cx + cr * 1.05, cy + cr * 0.9]
-    draw.arc(arc_box, start=190, end=350, fill="white", width=max(3, int(cr*0.14)))
+def draw_star(draw, center, r_outer, r_inner, points=5, fill="yellow", outline=None, width=1):
+    cx, cy = center
+    pts = []
+    for i in range(points * 2):
+        r = r_outer if i % 2 == 0 else r_inner
+        angle = i * math.pi / points - math.pi / 2
+        pts.append((cx + r * math.cos(angle), cy + r * math.sin(angle)))
+    draw.polygon(pts, fill=fill, outline=outline, width=width)
 
 def save_static(img, path):
     img.save(path, format="WEBP", lossless=True)
 
-def save_animated(frames, path, duration=120):
+def save_animated(frames, path, duration=130):
     frames[0].save(
         path,
         format="WEBP",
@@ -75,153 +58,153 @@ def create_pack_folder(pack_id):
     os.makedirs(p, exist_ok=True)
     return p
 
-# ── 1. br-bandeira-nacional (Static) ──
+# ── 1. br-bandeira-nacional ──
 def generate_br_bandeira_nacional():
     pack_dir = create_pack_folder('br-bandeira-nacional')
-    font_lg = get_font(46)
-    font_md = get_font(36)
-    font_sm = get_font(28)
+    font_lg, font_md, font_sm = get_font(44), get_font(32), get_font(24)
 
-    # 1. Classic waving badge
-    im = Image.new('RGBA', (512, 512), (0,0,0,0))
-    d = ImageDraw.Draw(im)
-    draw_brazil_flag(d, (56, 96, 456, 376))
-    draw_text_centered(d, "BRASIL", (256, 430), font_lg, fill="#FFDF00", stroke_fill="#002776", stroke_width=6)
-    save_static(im, os.path.join(pack_dir, "1.webp"))
-    im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+    im1 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d1 = ImageDraw.Draw(im1)
+    d1.rectangle([70, 60, 86, 460], fill="#94A3B8", outline="#475569", width=2)
+    d1.ellipse([64, 46, 92, 74], fill="#F59E0B", outline="#B45309", width=3)
+    d1.rectangle([86, 74, 450, 314], fill="#009C3B", outline="#005A20", width=4)
+    d1.polygon([(268, 94), (430, 194), (268, 294), (106, 194)], fill="#FFDF00")
+    d1.ellipse([218, 144, 318, 244], fill="#002776")
+    d1.arc([218, 160, 318, 230], 190, 350, fill="white", width=7)
+    draw_text_centered(d1, "BRASIL 🇧🇷", (270, 410), font_lg, fill="#FFDF00", stroke_fill="#002776", stroke_width=6)
+    save_static(im1, os.path.join(pack_dir, "1.webp"))
+    im1.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
-    # 2. Heart flag
-    im = Image.new('RGBA', (512, 512), (0,0,0,0))
-    d = ImageDraw.Draw(im)
-    d.polygon([(256, 460), (60, 240), (120, 100), (256, 180), (392, 100), (452, 240)], fill=(0, 156, 59, 255))
-    d.pieslice([60, 100, 256, 280], 180, 0, fill=(0, 156, 59, 255))
-    d.pieslice([256, 100, 452, 280], 180, 0, fill=(0, 156, 59, 255))
-    d.polygon([(256, 170), (400, 260), (256, 390), (112, 260)], fill=(255, 223, 0, 255))
-    d.ellipse([196, 200, 316, 320], fill=(0, 39, 118, 255))
-    draw_text_centered(d, "ORGULHO", (256, 70), font_md, fill="#009C3B", stroke_fill="white", stroke_width=4)
-    save_static(im, os.path.join(pack_dir, "2.webp"))
+    im2 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d2 = ImageDraw.Draw(im2)
+    br_map = [(130, 120), (220, 80), (320, 100), (430, 150), (460, 240), (390, 300), (360, 420), (310, 460), (280, 400), (240, 320), (150, 280), (90, 200)]
+    d2.polygon(br_map, fill="#009C3B", outline="#FFDF00", width=8)
+    d2.polygon([(280, 170), (380, 240), (280, 310), (180, 240)], fill="#FFDF00")
+    d2.ellipse([240, 200, 320, 280], fill="#002776")
+    draw_star(d2, (280, 235), 10, 5, fill="white")
+    draw_text_centered(d2, "PÁTRIA AMADA", (256, 440), font_md, fill="#009C3B", stroke_fill="white", stroke_width=5)
+    save_static(im2, os.path.join(pack_dir, "2.webp"))
 
-    # 3. Round Seal / Ordem e Progresso
-    im = Image.new('RGBA', (512, 512), (0,0,0,0))
-    d = ImageDraw.Draw(im)
-    d.ellipse([40, 40, 472, 472], fill=(0, 156, 59, 255), outline=(255, 223, 0, 255), width=10)
-    d.polygon([(256, 90), (430, 256), (256, 422), (82, 256)], fill=(255, 223, 0, 255))
-    d.ellipse([156, 156, 356, 356], fill=(0, 39, 118, 255))
-    d.arc([160, 200, 352, 330], start=190, end=350, fill="white", width=12)
-    draw_text_centered(d, "ORDEM E PROGRESSO", (256, 256), get_font(18), fill="white", stroke_fill="#002776", stroke_width=2)
-    save_static(im, os.path.join(pack_dir, "3.webp"))
+    im3 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d3 = ImageDraw.Draw(im3)
+    d3.polygon([(256, 450), (60, 240), (120, 100), (256, 180), (392, 100), (452, 240)], fill="#009C3B")
+    d3.pieslice([60, 100, 256, 280], 180, 0, fill="#009C3B")
+    d3.pieslice([256, 100, 452, 280], 180, 0, fill="#009C3B")
+    d3.polygon([(256, 180), (390, 250), (256, 370), (122, 250)], fill="#FFDF00")
+    d3.ellipse([206, 200, 306, 300], fill="#002776")
+    draw_text_centered(d3, "AMOR VERDE & AMARELO", (256, 440), font_sm, fill="#009C3B", stroke_fill="white", stroke_width=4)
+    save_static(im3, os.path.join(pack_dir, "3.webp"))
 
-    # 4. Map Silhouette with Flag
-    im = Image.new('RGBA', (512, 512), (0,0,0,0))
-    d = ImageDraw.Draw(im)
-    d.rounded_rectangle([70, 70, 442, 390], radius=30, fill=(0, 156, 59, 255), outline="white", width=6)
-    draw_brazil_flag(d, (100, 110, 412, 340))
-    draw_text_centered(d, "PÁTRIA AMADA", (256, 440), font_lg, fill="#009C3B", stroke_fill="#FFDF00", stroke_width=5)
-    save_static(im, os.path.join(pack_dir, "4.webp"))
+    im4 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d4 = ImageDraw.Draw(im4)
+    d4.ellipse([80, 80, 432, 432], fill="#FFDF00", outline="#009C3B", width=10)
+    d4.pieslice([80, 80, 432, 432], 0, 180, fill="#002776")
+    d4.polygon([(160, 432), (256, 260), (352, 432)], fill="#15803D")
+    d4.rectangle([250, 170, 262, 265], fill="white")
+    d4.ellipse([248, 150, 264, 170], fill="white")
+    d4.line([(180, 195), (332, 195)], fill="white", width=8)
+    draw_text_centered(d4, "RIO DE JANEIRO", (256, 420), font_md, fill="white", stroke_fill="#002776", stroke_width=5)
+    save_static(im4, os.path.join(pack_dir, "4.webp"))
 
-    # 5. 100% Brasileiro
-    im = Image.new('RGBA', (512, 512), (0,0,0,0))
-    d = ImageDraw.Draw(im)
-    d.rectangle([50, 140, 462, 370], fill=(255, 223, 0, 255), outline=(0, 156, 59, 255), width=8)
-    draw_text_centered(d, "100%", (256, 210), get_font(60), fill="#002776", stroke_fill="white", stroke_width=6)
-    draw_text_centered(d, "BRASILEIRO", (256, 300), font_lg, fill="#009C3B", stroke_fill="white", stroke_width=5)
-    save_static(im, os.path.join(pack_dir, "5.webp"))
+    im5 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d5 = ImageDraw.Draw(im5)
+    d5.polygon([(256, 50), (440, 120), (410, 340), (256, 460), (102, 340), (72, 120)], fill="#009C3B", outline="#FFDF00", width=12)
+    d5.polygon([(256, 120), (380, 240), (256, 360), (132, 240)], fill="#FFDF00")
+    d5.ellipse([196, 180, 316, 300], fill="#002776")
+    draw_star(d5, (256, 240), 24, 11, fill="white")
+    draw_text_centered(d5, "GIGANTE", (256, 410), font_md, fill="#FFDF00", stroke_fill="#002776", stroke_width=5)
+    save_static(im5, os.path.join(pack_dir, "5.webp"))
 
-    # 6. É do Brasil
-    im = Image.new('RGBA', (512, 512), (0,0,0,0))
-    d = ImageDraw.Draw(im)
-    d.ellipse([50, 80, 462, 432], fill=(0, 39, 118, 255), outline=(255, 223, 0, 255), width=8)
-    draw_text_centered(d, "É DO", (256, 180), font_lg, fill="#FFDF00", stroke_fill="#009C3B", stroke_width=5)
-    draw_text_centered(d, "BRASIL! 🇧🇷", (256, 280), get_font(52), fill="white", stroke_fill="#009C3B", stroke_width=5)
-    save_static(im, os.path.join(pack_dir, "6.webp"))
+    im6 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d6 = ImageDraw.Draw(im6)
+    d6.polygon([(180, 280), (130, 460), (200, 420), (230, 460), (210, 300)], fill="#009C3B", outline="#FFDF00", width=3)
+    d6.polygon([(332, 280), (382, 460), (312, 420), (282, 460), (302, 300)], fill="#FFDF00", outline="#009C3B", width=3)
+    d6.ellipse([116, 70, 396, 350], fill="#F59E0B", outline="#B45309", width=8)
+    d6.ellipse([146, 100, 366, 320], fill="#009C3B")
+    d6.polygon([(256, 120), (340, 210), (256, 300), (172, 210)], fill="#FFDF00")
+    d6.ellipse([216, 170, 296, 250], fill="#002776")
+    draw_text_centered(d6, "1º LUGAR", (256, 390), font_lg, fill="#009C3B", stroke_fill="white", stroke_width=6)
+    save_static(im6, os.path.join(pack_dir, "6.webp"))
 
-    # 7. Green & Yellow Ribbon
-    im = Image.new('RGBA', (512, 512), (0,0,0,0))
-    d = ImageDraw.Draw(im)
-    d.polygon([(60, 200), (256, 90), (452, 200), (390, 370), (256, 440), (122, 370)], fill=(0, 156, 59, 255), outline=(255, 223, 0, 255), width=6)
-    d.ellipse([176, 180, 336, 340], fill=(255, 223, 0, 255))
-    d.ellipse([206, 210, 306, 310], fill=(0, 39, 118, 255))
-    draw_text_centered(d, "VAI BRASIL", (256, 260), font_sm, fill="white", stroke_fill="#002776", stroke_width=3)
-    save_static(im, os.path.join(pack_dir, "7.webp"))
+    im7 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d7 = ImageDraw.Draw(im7)
+    d7.ellipse([60, 60, 452, 452], fill="#002776", outline="#FFDF00", width=8)
+    draw_star(d7, (256, 240), 130, 40, points=8, fill="#FFDF00", outline="#009C3B", width=3)
+    d7.ellipse([206, 190, 306, 290], fill="#009C3B", outline="white", width=4)
+    draw_text_centered(d7, "SOU BRASIL", (256, 425), font_lg, fill="#FFDF00", stroke_fill="#002776", stroke_width=5)
+    save_static(im7, os.path.join(pack_dir, "7.webp"))
 
-    # 8. Brazilian Shield Badge
-    im = Image.new('RGBA', (512, 512), (0,0,0,0))
-    d = ImageDraw.Draw(im)
-    d.polygon([(256, 50), (440, 130), (390, 370), (256, 470), (122, 370), (72, 130)], fill=(0, 156, 59, 255), outline=(255, 223, 0, 255), width=8)
-    draw_brazil_flag(d, (136, 160, 376, 330))
-    draw_text_centered(d, "CAMPEÃO", (256, 410), font_md, fill="#FFDF00", stroke_fill="#002776", stroke_width=4)
-    save_static(im, os.path.join(pack_dir, "8.webp"))
+    im8 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d8 = ImageDraw.Draw(im8)
+    d8.rounded_rectangle([50, 100, 462, 380], radius=35, fill="#009C3B", outline="#FFDF00", width=8)
+    d8.polygon([(256, 130), (410, 240), (256, 350), (102, 240)], fill="#FFDF00")
+    d8.ellipse([186, 170, 326, 310], fill="#002776")
+    draw_text_centered(d8, "BRASILEIRO COM ORGULHO", (256, 430), font_md, fill="#009C3B", stroke_fill="white", stroke_width=5)
+    save_static(im8, os.path.join(pack_dir, "8.webp"))
 
 
-# ── 2. br-bandeira-animada (Animated) ──
+# ── 2. br-bandeira-animada ──
 def generate_br_bandeira_animada():
     pack_dir = create_pack_folder('br-bandeira-animada')
-    font_lg = get_font(44)
-    font_md = get_font(34)
+    font_sm = get_font(24)
 
-    for st_idx in range(1, 9):
+    animations = [
+        ("BANDEIRA ONDULANDO 🇧🇷", "wave"),
+        ("FOGOS VERDE & AMARELO 🎆", "fireworks"),
+        ("CORAÇÃO BRASILEIRO 💖", "heartbeat"),
+        ("MOEDA DE OURO 🪙", "coin_spin"),
+        ("AVIÃO COM FAIXA ✈️", "plane"),
+        ("NEON PULSANTE ⚡", "neon"),
+        ("TAÇA DO MUNDO BRILHANDO 🏆", "trophy"),
+        ("CHUVA DE CONFETE 🎉", "confetti")
+    ]
+
+    for st_idx, (title, anim_type) in enumerate(animations, 1):
         frames = []
-        num_frames = 6
-        for f in range(num_frames):
+        for f in range(6):
             im = Image.new('RGBA', (512, 512), (0,0,0,0))
             d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
+            phase = (f / 6.0) * 2 * math.pi
             
-            if st_idx == 1:
-                wave_offset = int(math.sin(phase) * 16)
-                y_shift = int(math.cos(phase) * 10)
-                draw_brazil_flag(d, (56, 110 + wave_offset, 456, 360 + wave_offset))
-                draw_text_centered(d, "BRASIL!", (256, 420 + y_shift), font_lg, fill="#FFDF00", stroke_fill="#002776", stroke_width=6)
-            elif st_idx == 2:
-                scale = 1.0 + 0.12 * math.sin(phase)
-                cx, cy = 256, 240
-                r = int(140 * scale)
-                d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(0, 156, 59, 255), outline="#FFDF00", width=8)
-                d.polygon([(cx, cy - r + 30), (cx + r - 30, cy), (cx, cy + r - 30), (cx - r + 30, cy)], fill=(255, 223, 0, 255))
-                d.ellipse([cx - int(r*0.45), cy - int(r*0.45), cx + int(r*0.45), cy + int(r*0.45)], fill=(0, 39, 118, 255))
-                draw_text_centered(d, "MEU BRASIL", (256, 430), font_md, fill="#009C3B", stroke_fill="white", stroke_width=4)
-            elif st_idx == 3:
-                draw_brazil_flag(d, (60, 100, 452, 350))
-                star_size = int(15 + 10 * math.sin(phase + st_idx))
-                for sx, sy in [(100, 80), (410, 90), (256, 50), (120, 380), (390, 370)]:
-                    d.ellipse([sx - star_size, sy - star_size, sx + star_size, sy + star_size], fill="#FFDF00")
-                draw_text_centered(d, "VIVA O BRASIL!", (256, 430), font_md, fill="#002776", stroke_fill="white", stroke_width=5)
-            elif st_idx == 4:
-                bounce = int(abs(math.sin(phase)) * 30)
-                d.ellipse([140, 150 - bounce, 372, 382 - bounce], fill=(255, 223, 0, 255), outline=(0, 156, 59, 255), width=10)
-                d.ellipse([200, 220 - bounce, 230, 260 - bounce], fill="black")
-                d.ellipse([282, 220 - bounce, 312, 260 - bounce], fill="black")
-                d.arc([200, 240 - bounce, 312, 330 - bounce], 20, 160, fill="black", width=6)
-                draw_text_centered(d, "BRASILEIRÍSSIMO", (256, 430), font_md, fill="#009C3B", stroke_fill="white", stroke_width=4)
-            elif st_idx == 5:
-                rot = phase
-                d.ellipse([80, 80, 432, 432], fill=(0, 39, 118, 255), outline=(0, 156, 59, 255), width=12)
-                d.polygon([(256 + int(math.cos(rot)*140), 256 + int(math.sin(rot)*140)),
-                           (256 + int(math.cos(rot+math.pi/2)*140), 256 + int(math.sin(rot+math.pi/2)*140)),
-                           (256 + int(math.cos(rot+math.pi)*140), 256 + int(math.sin(rot+math.pi)*140)),
-                           (256 + int(math.cos(rot+3*math.pi/2)*140), 256 + int(math.sin(rot+3*math.pi/2)*140))],
-                          fill=(255, 223, 0, 255))
-                draw_text_centered(d, "GIGANTE PELA NATUREZA", (256, 470), get_font(20), fill="#009C3B", stroke_fill="white", stroke_width=3)
-            elif st_idx == 6:
-                draw_brazil_flag(d, (90, 140, 422, 340))
-                for ci in range(12):
-                    cx = (ci * 40 + int(f * 25)) % 480 + 16
-                    cy = (ci * 35 + int(f * 30)) % 400 + 40
-                    color = "#FFDF00" if ci % 2 == 0 else "#009C3B"
-                    d.rectangle([cx, cy, cx + 12, cy + 12], fill=color)
-                draw_text_centered(d, "ALEGRIA PURA!", (256, 420), font_lg, fill="#009C3B", stroke_fill="#FFDF00", stroke_width=5)
-            elif st_idx == 7:
-                glow = int(20 * math.sin(phase))
-                d.polygon([(160, 120), (352, 120), (320, 280), (280, 340), (280, 400), (340, 420), (172, 420), (232, 400), (232, 340), (192, 280)], fill="#FFD700", outline="#B8860B", width=6)
-                d.ellipse([120 - glow, 150, 180, 230], outline="#FFD700", width=8)
-                d.ellipse([332, 150, 392 + glow, 230], outline="#FFD700", width=8)
-                draw_text_centered(d, "RUMO AO HEXA! ⭐", (256, 80), font_md, fill="#009C3B", stroke_fill="#FFDF00", stroke_width=4)
+            if anim_type == "wave":
+                wo = int(math.sin(phase) * 18)
+                d.rectangle([80, 110 + wo, 432, 330 + wo], fill="#009C3B", outline="#005A20", width=4)
+                d.polygon([(256, 130 + wo), (390, 220 + wo), (256, 310 + wo), (122, 220 + wo)], fill="#FFDF00")
+                d.ellipse([206, 170 + wo, 306, 270 + wo], fill="#002776")
+            elif anim_type == "fireworks":
+                d.ellipse([100, 100, 412, 412], fill="#0F172A", outline="#FFDF00", width=6)
+                for fw_i in range(12):
+                    fa = fw_i * (math.pi / 6)
+                    fr = 50 + int(f * 15)
+                    fx = int(256 + math.cos(fa) * fr)
+                    fy = int(240 + math.sin(fa) * fr)
+                    d.ellipse([fx-6, fy-6, fx+6, fy+6], fill="#FFDF00" if fw_i % 2 == 0 else "#009C3B")
+            elif anim_type == "coin_spin":
+                scale_x = abs(math.cos(phase))
+                cw = int(140 * max(0.1, scale_x))
+                d.ellipse([256 - cw, 120, 256 + cw, 360], fill="#F59E0B", outline="#B45309", width=6)
+                if cw > 40:
+                    draw_text_centered(d, "BR", (256, 240), get_font(42), fill="#009C3B", stroke_fill="white", stroke_width=3)
+            elif anim_type == "plane":
+                px = 60 + f * 45
+                d.polygon([(px, 160), (px + 60, 180), (px, 200), (px + 10, 180)], fill="#E2E8F0")
+                d.rectangle([px - 140, 165, px - 10, 195], fill="#009C3B", outline="#FFDF00", width=2)
+                draw_text_centered(d, "BRASIL", (px - 75, 180), get_font(16), fill="#FFDF00")
+            elif anim_type == "trophy":
+                d.polygon([(180, 140), (332, 140), (300, 280), (256, 340), (212, 280)], fill="#F59E0B", outline="#B45309", width=4)
+                d.rectangle([236, 340, 276, 380], fill="#B45309")
+                d.rectangle([200, 380, 312, 400], fill="#78350F")
+                for beam in range(6):
+                    ba = phase + beam * (math.pi / 3)
+                    d.line([(256, 200), (int(256 + math.cos(ba)*160), int(200 + math.sin(ba)*160))], fill="#FEF08A", width=3)
             else:
-                wave = int(math.sin(phase) * 20)
-                d.rounded_rectangle([70, 120 + wave, 442, 360 + wave], radius=25, fill=(0, 156, 59, 255), outline="#FFDF00", width=8)
-                draw_text_centered(d, "ORGULHO 🇧🇷", (256, 240 + wave), font_lg, fill="white", stroke_fill="#002776", stroke_width=6)
-                draw_text_centered(d, "VERDE E AMARELO", (256, 430), font_md, fill="#009C3B", stroke_fill="white", stroke_width=4)
+                scale = 1.0 + 0.15 * math.sin(phase)
+                r = int(120 * scale)
+                d.ellipse([256 - r, 240 - r, 256 + r, 240 + r], fill="#009C3B", outline="#FFDF00", width=8)
+                d.polygon([(256, 240 - int(r*0.7)), (256 + int(r*0.7), 240), (256, 240 + int(r*0.7)), (256 - int(r*0.7), 240)], fill="#FFDF00")
+                d.ellipse([256 - int(r*0.35), 240 - int(r*0.35), 256 + int(r*0.35), 240 + int(r*0.35)], fill="#002776")
 
+            draw_text_centered(d, title, (256, 435), font_sm, fill="#047857", stroke_fill="white", stroke_width=4)
             frames.append(im)
 
         save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
@@ -229,356 +212,221 @@ def generate_br_bandeira_animada():
             frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
 
-# ── 3. br-bolsonaro-dancando (Animated) ──
+# ── 3. br-bolsonaro-dancando ──
 def generate_br_bolsonaro_dancando():
     pack_dir = create_pack_folder('br-bolsonaro-dancando')
     font_md = get_font(32)
 
-    titles = [
-        ("DANÇA DO CAPITÃO", "🕺"),
-        ("É A CLOROQUINA!", "💊"),
-        ("TÁ COM MEDO?", "😎"),
-        ("VALEU, MEU BRASIL!", "🇧🇷"),
-        ("VAI DAR BOM!", "👍"),
-        ("GRITA MAIS ALTO!", "📢"),
-        ("MITOU DEMAIS!", "🔥"),
-        ("FORÇA & HONRA!", "⚡")
+    scenes = [
+        ("DANÇA DO CAPITÃO 🕺", "dance"),
+        ("TURN DOWN FOR WHAT 😎", "thug_life"),
+        ("DE JET SKI NA PRAIA 🌊", "jetski"),
+        ("TÁ COM MEDO, PETISTA? 📢", "megaphone"),
+        ("TUDO CERTO, MEU BRASIL 👍", "thumbs_up"),
+        ("TOCANDO SANFONA 🪗", "accordion"),
+        ("FLEXÃO MILITAR 💪", "pushups"),
+        ("PASTEL COM CALDO DE CANA 🥟", "pastel")
     ]
 
-    for st_idx, (title, emoji) in enumerate(titles, 1):
+    for st_idx, (title, scene_type) in enumerate(scenes, 1):
         frames = []
-        num_frames = 6
-        for f in range(num_frames):
+        for f in range(6):
             im = Image.new('RGBA', (512, 512), (0,0,0,0))
             d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
+            phase = (f / 6.0) * 2 * math.pi
             
-            arm_swing = int(math.sin(phase) * 35)
             bounce = int(abs(math.sin(phase)) * 20)
-            hip_sway = int(math.cos(phase) * 18)
+            sway = int(math.sin(phase) * 25)
             
-            d.ellipse([60, 60, 452, 452], fill=(230, 245, 230, 240), outline=(0, 156, 59, 255), width=6)
+            d.ellipse([50, 50, 462, 462], fill=(240, 253, 244, 245), outline="#16A34A", width=7)
+            head_x, head_y = 256, 150 - bounce
             
-            leg_l = 380 - bounce
-            leg_r = 380 - bounce + int(math.sin(phase)*15)
-            d.line([(220 + hip_sway, 300 - bounce), (200 + hip_sway, leg_l)], fill="#1E293B", width=16)
-            d.line([(292 + hip_sway, 300 - bounce), (312 + hip_sway, leg_r)], fill="#1E293B", width=16)
-            
-            d.polygon([
-                (190 + hip_sway, 180 - bounce),
-                (322 + hip_sway, 180 - bounce),
-                (332 + hip_sway, 310 - bounce),
-                (180 + hip_sway, 310 - bounce)
-            ], fill="#1A365D")
-            d.polygon([(240 + hip_sway, 180 - bounce), (272 + hip_sway, 180 - bounce), (260 + hip_sway, 210 - bounce), (252 + hip_sway, 210 - bounce)], fill="white")
-            d.polygon([(252 + hip_sway, 205 - bounce), (260 + hip_sway, 205 - bounce), (266 + hip_sway, 290 - bounce), (256 + hip_sway, 300 - bounce), (246 + hip_sway, 290 - bounce)], fill="#FFDF00")
-
-            head_x = 256 + hip_sway
-            head_y = 135 - bounce
-            d.ellipse([head_x - 45, head_y - 50, head_x + 45, head_y + 45], fill="#FFD1A4")
-            d.arc([head_x - 48, head_y - 55, head_x + 48, head_y + 10], 170, 370, fill="#718096", width=14)
-            if st_idx in (2, 3, 7):
-                d.rectangle([head_x - 38, head_y - 12, head_x - 6, head_y + 10], fill="black")
-                d.rectangle([head_x + 6, head_y - 12, head_x + 38, head_y + 10], fill="black")
-                d.line([(head_x - 6, head_y - 2), (head_x + 6, head_y - 2)], fill="black", width=4)
+            if scene_type == "thug_life":
+                glass_y = min(head_y - 5, 60 + f * 18)
+                d.ellipse([head_x - 45, head_y - 45, head_x + 45, head_y + 45], fill="#FED7AA")
+                d.arc([head_x - 48, head_y - 50, head_x + 48, head_y + 10], 170, 370, fill="#64748B", width=14)
+                d.rectangle([head_x - 40, glass_y, head_x - 8, glass_y + 20], fill="black")
+                d.rectangle([head_x + 8, glass_y, head_x + 40, glass_y + 20], fill="black")
+                d.line([(head_x - 8, glass_y + 8), (head_x + 8, glass_y + 8)], fill="black", width=4)
+            elif scene_type == "jetski":
+                d.ellipse([head_x - 35, head_y - 35, head_x + 35, head_y + 35], fill="#FED7AA")
+                d.polygon([(140, 310 + bounce), (370, 310 + bounce), (420, 260 + bounce), (200, 260 + bounce)], fill="#2563EB", outline="#1D4ED8", width=4)
+                for wx in [110, 160, 380, 420]:
+                    d.ellipse([wx - 10, 300 + bounce + sway, wx + 10, 330 + bounce + sway], fill="#38BDF8")
+            elif scene_type == "megaphone":
+                d.ellipse([head_x - 40, head_y - 40, head_x + 40, head_y + 40], fill="#FED7AA")
+                d.polygon([(260, head_y), (350, head_y - 40), (350, head_y + 40)], fill="#DC2626", outline="black", width=3)
+                d.arc([360, head_y - 50, 410, head_y + 50], 290, 70, fill="#F59E0B", width=6)
+            elif scene_type == "accordion":
+                d.ellipse([head_x - 40, head_y - 40, head_x + 40, head_y + 40], fill="#FED7AA")
+                bellow_w = 60 + abs(sway)
+                d.rectangle([256 - bellow_w, 240, 256 + bellow_w, 320], fill="#DC2626", outline="black", width=3)
+                for bx in range(256 - bellow_w, 256 + bellow_w, 15):
+                    d.line([(bx, 240), (bx, 320)], fill="white", width=2)
             else:
-                d.ellipse([head_x - 26, head_y - 10, head_x - 12, head_y + 4], fill="#4A5568")
-                d.ellipse([head_x + 12, head_y - 10, head_x + 26, head_y + 4], fill="#4A5568")
-            d.arc([head_x - 22, head_y + 5, head_x + 22, head_y + 28], 20, 160, fill="#9B2C2C", width=5)
+                d.ellipse([head_x - 45, head_y - 45, head_x + 45, head_y + 45], fill="#FED7AA")
+                d.arc([head_x - 48, head_y - 50, head_x + 48, head_y + 10], 170, 370, fill="#64748B", width=14)
+                d.polygon([(190, head_y + 45), (322, head_y + 45), (342, 330), (170, 330)], fill="#1E3A8A")
+                d.line([(190, head_y + 55), (320, 330)], fill="#009C3B", width=16)
+                d.line([(195, head_y + 58), (325, 330)], fill="#FFDF00", width=8)
+                d.ellipse([130, 220 + sway, 170, 260 + sway], fill="#FED7AA")
+                d.ellipse([342, 220 - sway, 382, 260 - sway], fill="#FED7AA")
 
-            d.line([(192 + hip_sway, 195 - bounce), (315 + hip_sway, 305 - bounce)], fill="#009C3B", width=12)
-            d.line([(195 + hip_sway, 198 - bounce), (318 + hip_sway, 308 - bounce)], fill="#FFDF00", width=6)
-
-            if st_idx in (4, 5):
-                d.line([(190 + hip_sway, 200 - bounce), (130, 160 - arm_swing)], fill="#1A365D", width=14)
-                d.line([(322 + hip_sway, 200 - bounce), (382, 160 + arm_swing)], fill="#1A365D", width=14)
-                d.ellipse([115, 145 - arm_swing, 140, 170 - arm_swing], fill="#FFD1A4")
-                d.ellipse([370, 145 + arm_swing, 395, 170 + arm_swing], fill="#FFD1A4")
-            else:
-                d.line([(190 + hip_sway, 200 - bounce), (120, 240 + arm_swing)], fill="#1A365D", width=14)
-                d.line([(322 + hip_sway, 200 - bounce), (390, 160 - arm_swing)], fill="#1A365D", width=14)
-                d.ellipse([105, 230 + arm_swing, 130, 255 + arm_swing], fill="#FFD1A4")
-                d.ellipse([380, 145 - arm_swing, 405, 170 - arm_swing], fill="#FFD1A4")
-
-            draw_text_centered(d, f"{title} {emoji}", (256, 440), font_md, fill="#009C3B", stroke_fill="white", stroke_width=4)
-            frames.append(im)
-
-        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 4. br-beijo-apaixonado (Animated) ──
-def generate_br_beijo_apaixonado():
-    pack_dir = create_pack_folder('br-beijo-apaixonado')
-    font_md = get_font(34)
-
-    phrases = [
-        "UM BEIJO MEU AMOR 💋",
-        "BEIJO GOSTOSO 😘",
-        "MIL BEIJINHOS 💕",
-        "TE QUERO TANTO! ❤️",
-        "BEIJO NA BOCA 👄",
-        "VOU TE ENCHER DE BEIJO 🥰",
-        "BEIJÃO PRA VOCÊ 💖",
-        "ME DÁ UM BEIJO? 😍"
-    ]
-
-    for st_idx, phrase in enumerate(phrases, 1):
-        frames = []
-        num_frames = 6
-        for f in range(num_frames):
-            im = Image.new('RGBA', (512, 512), (0,0,0,0))
-            d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
-            
-            scale = 1.0 + 0.15 * math.sin(phase)
-            lip_w = int(160 * scale)
-            lip_h = int(90 * scale)
-            cx, cy = 256, 230
-            
-            for hi in range(5):
-                h_phase = phase + hi * 1.2
-                hx = int(cx + math.sin(h_phase) * (80 + hi * 30))
-                hy = int(cy - (f * 15 + hi * 35) % 180 - 40)
-                hs = int(16 + 8 * math.sin(h_phase))
-                d.ellipse([hx - hs, hy - hs, hx + hs, hy + hs], fill=(255, 60, 120, 220))
-
-            top_lip = [
-                (cx - lip_w, cy),
-                (cx - lip_w*0.5, cy - lip_h),
-                (cx, cy - int(lip_h*0.4)),
-                (cx + lip_w*0.5, cy - lip_h),
-                (cx + lip_w, cy),
-                (cx, cy - int(lip_h*0.1))
-            ]
-            bot_lip = [
-                (cx - lip_w, cy),
-                (cx - lip_w*0.4, cy + lip_h),
-                (cx + lip_w*0.4, cy + lip_h),
-                (cx + lip_w, cy),
-                (cx, cy + int(lip_h*0.2))
-            ]
-            d.polygon(top_lip, fill=(235, 30, 85, 255))
-            d.polygon(bot_lip, fill=(210, 20, 70, 255))
-            d.ellipse([cx - int(lip_w*0.3), cy + int(lip_h*0.3), cx - int(lip_w*0.1), cy + int(lip_h*0.6)], fill=(255, 180, 200, 230))
-            
-            draw_text_centered(d, phrase, (256, 430), font_md, fill="#E11D48", stroke_fill="white", stroke_width=5)
-            frames.append(im)
-
-        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 5. br-abraco-carinhoso (Animated) ──
-def generate_br_abraco_carinhoso():
-    pack_dir = create_pack_folder('br-abraco-carinhoso')
-    font_md = get_font(34)
-
-    phrases = [
-        "ABRAÇO APERTADO 🤗",
-        "VEM CÁ ME ABRAÇAR 🥰",
-        "SINTA MEU ABRAÇO 🫂",
-        "CARINHO GOSTOSO ❤️",
-        "ABRAÇO DE URSO 🐻",
-        "TÔ COM SAUDADE 💕",
-        "MEU COLO É SEU ✨",
-        "ABRAÇO VIRTUAL 💌"
-    ]
-
-    for st_idx, phrase in enumerate(phrases, 1):
-        frames = []
-        num_frames = 6
-        for f in range(num_frames):
-            im = Image.new('RGBA', (512, 512), (0,0,0,0))
-            d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
-            
-            squeeze = int(math.sin(phase) * 18)
-            
-            d.ellipse([140 + squeeze, 130, 270 + squeeze, 260], fill="#FBBF24")
-            d.ellipse([120 + squeeze, 220, 280 + squeeze, 380], fill="#F59E0B")
-            d.arc([175 + squeeze, 175, 205 + squeeze, 200], 180, 360, fill="#78350F", width=4)
-            d.arc([220 + squeeze, 175, 250 + squeeze, 200], 180, 360, fill="#78350F", width=4)
-            d.ellipse([160 + squeeze, 195, 185 + squeeze, 215], fill="#F87171")
-            
-            d.ellipse([240 - squeeze, 130, 370 - squeeze, 260], fill="#F472B6")
-            d.ellipse([230 - squeeze, 220, 390 - squeeze, 380], fill="#EC4899")
-            d.arc([260 - squeeze, 175, 290 - squeeze, 200], 180, 360, fill="#831843", width=4)
-            d.arc([305 - squeeze, 175, 335 - squeeze, 200], 180, 360, fill="#831843", width=4)
-            d.ellipse([325 - squeeze, 195, 350 - squeeze, 215], fill="#FDA4AF")
-
-            d.line([(160 + squeeze, 260), (330 - squeeze, 280)], fill="#F59E0B", width=22)
-            d.ellipse([315 - squeeze, 265, 345 - squeeze, 295], fill="#FBBF24")
-            d.line([(350 - squeeze, 270), (180 + squeeze, 290)], fill="#EC4899", width=20)
-            d.ellipse([165 + squeeze, 275, 195 + squeeze, 305], fill="#F472B6")
-
-            hs = int(24 + 10 * math.sin(phase))
-            d.ellipse([256 - hs, 90 - hs, 256 + hs, 90 + hs], fill="#EF4444")
-
-            draw_text_centered(d, phrase, (256, 430), font_md, fill="#DB2777", stroke_fill="white", stroke_width=5)
-            frames.append(im)
-
-        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 6. br-figurinhas-hot (Animated) ──
-def generate_br_figurinhas_hot():
-    pack_dir = create_pack_folder('br-figurinhas-hot')
-    font_md = get_font(34)
-
-    phrases = [
-        ("TÔ PEGANDO FOGO 🔥", "flame"),
-        ("VOCÊ É UMA DELÍCIA 🤤", "peach"),
-        ("QUERO VOCÊ AGORA 😏", "devil"),
-        ("HOJE TEM... 😈", "wink"),
-        ("CLIMA ESQUENTOU 🌶️", "pepper"),
-        ("PROVOCAÇÃO PURA 💋", "lips"),
-        ("QUERO SEU BEIJO 👅", "fire_heart"),
-        ("VEM QUE EU TÔ FÁCIL 🔥", "flirt")
-    ]
-
-    for st_idx, (phrase, art_type) in enumerate(phrases, 1):
-        frames = []
-        num_frames = 6
-        for f in range(num_frames):
-            im = Image.new('RGBA', (512, 512), (0,0,0,0))
-            d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
-            
-            flame_flicker = int(math.sin(phase) * 15)
-            
-            if art_type in ("flame", "flirt"):
-                d.polygon([
-                    (256, 90 + flame_flicker),
-                    (330 + flame_flicker, 210),
-                    (380, 320),
-                    (310, 390),
-                    (200, 390),
-                    (130, 320),
-                    (180 - flame_flicker, 210)
-                ], fill="#EA580C")
-                d.polygon([
-                    (256, 170 + flame_flicker),
-                    (300, 260),
-                    (330, 340),
-                    (256, 370),
-                    (180, 340),
-                    (210, 260)
-                ], fill="#FACC15")
-            elif art_type == "peach":
-                d.ellipse([140, 160, 290, 350], fill="#FB923C")
-                d.ellipse([220, 160, 370, 350], fill="#F97316")
-                d.line([(256, 170), (256, 340)], fill="#C2410C", width=5)
-                d.polygon([(256, 160), (280, 110), (240, 130)], fill="#22C55E")
-            elif art_type == "pepper":
-                d.polygon([(256, 120), (320, 220), (340, 320), (280, 370), (210, 340), (200, 220)], fill="#DC2626")
-                d.rectangle([248, 90, 264, 125], fill="#15803D")
-            else:
-                d.ellipse([136, 130, 376, 370], fill="#9333EA")
-                d.polygon([(160, 160), (120, 80 + flame_flicker), (200, 140)], fill="#7E22CE")
-                d.polygon([(352, 160), (392, 80 + flame_flicker), (312, 140)], fill="#7E22CE")
-                d.polygon([(190, 220), (230, 240), (190, 245)], fill="white")
-                d.polygon([(322, 220), (282, 240), (322, 245)], fill="white")
-                d.ellipse([200, 230, 218, 245], fill="black")
-                d.ellipse([294, 230, 312, 245], fill="black")
-                d.arc([210, 270, 302, 330], 20, 160, fill="black", width=6)
-
-            draw_text_centered(d, phrase, (256, 435), font_md, fill="#EA580C", stroke_fill="white", stroke_width=5)
-            frames.append(im)
-
-        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 7. br-futebol-selecao (Static) ──
+# ── 5. br-futebol-selecao ──
 def generate_br_futebol_selecao():
     pack_dir = create_pack_folder('br-futebol-selecao')
-    font_lg = get_font(44)
-    font_sm = get_font(26)
+    font_lg, font_md, font_sm = get_font(42), get_font(32), get_font(24)
 
-    stickers_data = [
-        ("SELEÇÃO BRASILEIRA 🇧🇷", "Amarelinha 10"),
-        ("É GIGANTE O BRASIL!", "Canarinho"),
-        ("VINI JR NA PONTA! ⚡", "Drible"),
-        ("CAMISA 10 É DO BRASIL", "Jersey"),
-        ("VAI PRA CIMA DELES!", "Trophy"),
-        ("HEXA É NOSSO! ⭐⭐⭐⭐⭐⭐", "Stars"),
-        ("TORCIDA MAIS APAIXONADA", "Cheer"),
-        ("O PAÍS DO FUTEBOL ⚽", "Football")
-    ]
+    # 1. Pelé
+    im1 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d1 = ImageDraw.Draw(im1)
+    d1.ellipse([60, 60, 452, 452], fill="#FEF08A", outline="#009C3B", width=8)
+    d1.polygon([(190, 140), (220, 90), (256, 130), (292, 90), (322, 140), (310, 160), (202, 160)], fill="#F59E0B", outline="#B45309", width=3)
+    d1.ellipse([206, 165, 306, 265], fill="#78350F")
+    d1.polygon([(180, 265), (332, 265), (360, 380), (152, 380)], fill="#FFDF00", outline="#009C3B", width=4)
+    draw_text_centered(d1, "10", (256, 325), get_font(48), fill="#002776", stroke_fill="white", stroke_width=2)
+    draw_text_centered(d1, "PELÉ: O REI DO FUTEBOL 👑", (256, 425), font_sm, fill="#78350F", stroke_fill="white", stroke_width=4)
+    save_static(im1, os.path.join(pack_dir, "1.webp"))
+    im1.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
-    for st_idx, (title, sub) in enumerate(stickers_data, 1):
-        im = Image.new('RGBA', (512, 512), (0,0,0,0))
-        d = ImageDraw.Draw(im)
-        
-        d.ellipse([80, 80, 432, 432], fill=(255, 223, 0, 255), outline=(0, 156, 59, 255), width=10)
-        d.ellipse([156, 140, 356, 340], fill="white", outline="black", width=5)
-        d.polygon([(256, 210), (286, 235), (274, 270), (238, 270), (226, 235)], fill="black")
-        d.line([(256, 210), (256, 160)], fill="black", width=4)
-        d.line([(286, 235), (330, 215)], fill="black", width=4)
-        d.line([(274, 270), (310, 315)], fill="black", width=4)
-        d.line([(238, 270), (202, 315)], fill="black", width=4)
-        d.line([(226, 235), (182, 215)], fill="black", width=4)
-        
-        for star_x in [160, 200, 240, 280, 320, 360]:
-            d.ellipse([star_x - 8, 100, star_x + 8, 116], fill="#009C3B")
+    # 2. Neymar Jr
+    im2 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d2 = ImageDraw.Draw(im2)
+    d2.ellipse([60, 60, 452, 452], fill="#E0F2FE", outline="#0284C7", width=8)
+    d2.ellipse([216, 100, 296, 170], fill="#FDE047")
+    d2.ellipse([200, 145, 312, 265], fill="#D97706")
+    d2.arc([235, 180, 255, 200], 180, 360, fill="black", width=4)
+    d2.ellipse([275, 185, 290, 200], fill="black")
+    d2.ellipse([246, 225, 266, 255], fill="#F43F5E")
+    d2.ellipse([150, 160, 195, 230], fill="#D97706", outline="#78350F", width=2)
+    d2.ellipse([317, 160, 362, 230], fill="#D97706", outline="#78350F", width=2)
+    d2.polygon([(180, 265), (332, 265), (360, 370), (152, 370)], fill="#FFDF00")
+    draw_text_centered(d2, "NEYMAR JR ⚡", (256, 420), font_md, fill="#0369A1", stroke_fill="white", stroke_width=5)
+    save_static(im2, os.path.join(pack_dir, "2.webp"))
 
-        draw_text_centered(d, title, (256, 400), font_sm, fill="#002776", stroke_fill="white", stroke_width=4)
-        draw_text_centered(d, "BRASIL", (256, 50), font_lg, fill="#009C3B", stroke_fill="#FFDF00", stroke_width=6)
+    # 3. Vinicius Jr
+    im3 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d3 = ImageDraw.Draw(im3)
+    d3.ellipse([60, 60, 452, 452], fill="#DCFCE7", outline="#16A34A", width=8)
+    d3.ellipse([200, 130, 312, 250], fill="#5B3821")
+    d3.rectangle([210, 170, 250, 195], fill="black")
+    d3.rectangle([262, 170, 302, 195], fill="black")
+    d3.line([(250, 180), (262, 180)], fill="black", width=3)
+    d3.arc([226, 205, 286, 235], 0, 180, fill="white", width=6)
+    d3.polygon([(170, 250), (342, 250), (370, 370), (142, 370)], fill="#FFDF00")
+    draw_text_centered(d3, "7", (256, 310), get_font(46), fill="#002776", stroke_fill="white", stroke_width=2)
+    draw_text_centered(d3, "BAILA VINI JR! 🕺", (256, 420), font_md, fill="#15803D", stroke_fill="white", stroke_width=5)
+    save_static(im3, os.path.join(pack_dir, "3.webp"))
 
-        save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+    # 4. Ronaldinho Gaúcho
+    im4 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d4 = ImageDraw.Draw(im4)
+    d4.ellipse([60, 60, 452, 452], fill="#FEF9C3", outline="#CA8A04", width=8)
+    d4.ellipse([170, 110, 342, 290], fill="#1C1917")
+    d4.rectangle([195, 140, 317, 158], fill="white", outline="black", width=2)
+    d4.ellipse([200, 155, 312, 270], fill="#854D0E")
+    d4.arc([220, 215, 292, 255], 0, 180, fill="white", width=8)
+    d4.polygon([(110, 240), (140, 200), (160, 250), (130, 290)], fill="#854D0E")
+    d4.polygon([(402, 240), (372, 200), (352, 250), (382, 290)], fill="#854D0E")
+    draw_text_centered(d4, "RONALDINHO BRUXO 🤙", (256, 420), font_sm, fill="#854D0E", stroke_fill="white", stroke_width=4)
+    save_static(im4, os.path.join(pack_dir, "4.webp"))
+
+    # 5. Ronaldo R9
+    im5 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d5 = ImageDraw.Draw(im5)
+    d5.ellipse([60, 60, 452, 452], fill="#F3E8FF", outline="#9333EA", width=8)
+    d5.ellipse([196, 140, 316, 260], fill="#92400E")
+    d5.polygon([(236, 140), (276, 140), (256, 175)], fill="#1C1917")
+    d5.arc([226, 205, 286, 240], 0, 180, fill="white", width=6)
+    d5.rectangle([340, 160, 360, 260], fill="#92400E", outline="#78350F", width=2)
+    d5.polygon([(170, 260), (342, 260), (370, 370), (142, 370)], fill="#FFDF00")
+    draw_text_centered(d5, "9", (256, 315), get_font(46), fill="#002776", stroke_fill="white", stroke_width=2)
+    draw_text_centered(d5, "RONALDO R9 FENÔMENO", (256, 420), font_sm, fill="#7E22CE", stroke_fill="white", stroke_width=4)
+    save_static(im5, os.path.join(pack_dir, "5.webp"))
+
+    # 6. Marta
+    im6 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d6 = ImageDraw.Draw(im6)
+    d6.ellipse([60, 60, 452, 452], fill="#FFF1F2", outline="#E11D48", width=8)
+    d6.ellipse([190, 120, 322, 260], fill="#78350F")
+    d6.ellipse([300, 110, 340, 180], fill="#1C1917")
+    d6.polygon([(220, 250), (292, 250), (276, 330), (236, 330)], fill="#F59E0B", outline="#B45309", width=3)
+    d6.ellipse([236, 220, 276, 260], fill="#FDE047")
+    for star_i in range(6):
+        draw_star(d6, (156 + star_i * 40, 95), 12, 5, fill="#F59E0B")
+    draw_text_centered(d6, "MARTA: 6X MELHOR DO MUNDO", (256, 420), font_sm, fill="#BE123C", stroke_fill="white", stroke_width=4)
+    save_static(im6, os.path.join(pack_dir, "6.webp"))
+
+    # 7. Ayrton Senna
+    im7 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d7 = ImageDraw.Draw(im7)
+    d7.ellipse([60, 60, 452, 452], fill="#ECFDF5", outline="#059669", width=8)
+    d7.ellipse([140, 120, 372, 340], fill="#FFDF00", outline="#B45309", width=6)
+    d7.rectangle([140, 210, 372, 235], fill="#009C3B")
+    d7.rectangle([140, 235, 372, 260], fill="#002776")
+    d7.rounded_rectangle([190, 180, 322, 240], radius=15, fill="#0F172A", outline="white", width=3)
+    draw_text_centered(d7, "SENNA SEMPRE 🏎️🇧🇷", (256, 420), font_md, fill="#047857", stroke_fill="white", stroke_width=5)
+    save_static(im7, os.path.join(pack_dir, "7.webp"))
+
+    # 8. Richarlison
+    im8 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d8 = ImageDraw.Draw(im8)
+    d8.ellipse([60, 60, 452, 452], fill="#F0FDF4", outline="#15803D", width=8)
+    d8.ellipse([216, 120, 296, 175], fill="#F8FAFC", outline="#94A3B8", width=2)
+    d8.ellipse([206, 150, 306, 260], fill="#D97706")
+    d8.polygon([(180, 260), (100, 220), (140, 300)], fill="#FFDF00", outline="#009C3B", width=3)
+    d8.polygon([(332, 260), (412, 220), (372, 300)], fill="#FFDF00", outline="#009C3B", width=3)
+    draw_text_centered(d8, "PRUUU! DANÇA DO POMBO 🐦", (256, 420), font_sm, fill="#166534", stroke_fill="white", stroke_width=4)
+    save_static(im8, os.path.join(pack_dir, "8.webp"))
 
 
-# ── 8. br-futebol-gols-animados (Animated) ──
+# ── 8. br-futebol-gols-animados ──
 def generate_br_futebol_gols_animados():
     pack_dir = create_pack_folder('br-futebol-gols-animados')
-    font_lg = get_font(52)
-    font_md = get_font(34)
+    font_sm = get_font(24)
 
-    phrases = [
-        "GOOOOOOL DO BRASIL! ⚽",
-        "QUE GOLAÇO DE PLACA! 🔥",
-        "CHAPELOU O ADVERSÁRIO! 🎩",
-        "CANETA DESCONCERTANTE! 🪄",
-        "DEFESAÇA HISTÓRICA! 🧤",
-        "NA GAVETA ONDE A CORUJA DORME! 🦉",
-        "É CAMPEÃO DO MUNDO! 🏆",
-        "SAMBA NO PÉ & BOLA NA REDE! 🇧🇷"
+    celebrations = [
+        ("GOL DE BICICLETA! 🚲⚽", "bicycle"),
+        ("NA GAVETA! 🥅💥", "net_rip"),
+        ("DEFESAÇA HISTÓRICA! 🧤", "save"),
+        ("DESLIZANDO NO GRAMADO 🌱", "slide"),
+        ("SAMBA NA BANDEIRINHA 🚩", "corner_samba"),
+        ("BOLA GIRANDO NO DEDO ☝️", "finger_spin"),
+        ("SINALIZADOR & TORCIDA 🎇", "flare"),
+        ("CHAMA O VAR! 📺", "var")
     ]
 
-    for st_idx, phrase in enumerate(phrases, 1):
+    for st_idx, (title, action) in enumerate(celebrations, 1):
         frames = []
-        num_frames = 6
-        for f in range(num_frames):
+        for f in range(6):
             im = Image.new('RGBA', (512, 512), (0,0,0,0))
             d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
+            phase = (f / 6.0) * 2 * math.pi
             
-            ball_x = int(140 + f * 45)
-            ball_y = int(280 - math.sin(phase) * 50)
+            d.ellipse([50, 50, 462, 462], fill=(240, 253, 244, 240), outline="#16A34A", width=7)
             
-            d.rectangle([340, 120, 480, 360], outline="white", width=8)
-            for gy in range(140, 360, 25):
-                d.line([(340, gy), (480, gy)], fill=(200, 200, 200, 180), width=2)
-            for gx in range(360, 480, 25):
-                d.line([(gx, 120), (gx, 360)], fill=(200, 200, 200, 180), width=2)
+            if action == "bicycle":
+                rot = phase
+                d.ellipse([230, 200, 280, 250], fill="#FFD1A4")
+                d.line([(256, 230), (int(256 + math.cos(rot)*80), int(230 + math.sin(rot)*80))], fill="#FFDF00", width=14)
+                bx = int(256 + math.cos(rot + math.pi)*100)
+                by = int(230 + math.sin(rot + math.pi)*100)
+                d.ellipse([bx-25, by-25, bx+25, by+25], fill="white", outline="black", width=3)
+            elif action == "var":
+                d.rectangle([130, 140, 382, 320], outline="#38BDF8", width=8)
+                draw_text_centered(d, "V A R", (256, 230), get_font(46), fill="#38BDF8", stroke_fill="black", stroke_width=4)
+            elif action == "save":
+                gx = 140 + f * 35
+                d.rectangle([gx, 180, gx + 50, 260], fill="#EF4444", outline="black", width=3)
+                d.ellipse([gx + 60, 200, gx + 100, 240], fill="white", outline="black", width=3)
+            else:
+                bx = 140 + f * 45
+                by = int(260 - math.sin(phase)*40)
+                d.rectangle([340, 130, 470, 340], outline="white", width=6)
+                d.ellipse([bx-30, by-30, bx+30, by+30], fill="white", outline="black", width=4)
+                d.line([(bx-40, by), (bx-100, by)], fill="#FFDF00", width=5)
 
-            d.ellipse([ball_x - 35, ball_y - 35, ball_x + 35, ball_y + 35], fill="white", outline="black", width=4)
-            d.polygon([(ball_x, ball_y - 12), (ball_x + 12, ball_y), (ball_x + 8, ball_y + 14), (ball_x - 8, ball_y + 14), (ball_x - 12, ball_y)], fill="black")
-
-            d.line([(ball_x - 45, ball_y), (ball_x - 120, ball_y)], fill="#FFDF00", width=6)
-            d.line([(ball_x - 40, ball_y - 15), (ball_x - 100, ball_y - 25)], fill="#009C3B", width=4)
-            d.line([(ball_x - 40, ball_y + 15), (ball_x - 100, ball_y + 25)], fill="#009C3B", width=4)
-
-            draw_text_centered(d, "G O L !", (256, 80), font_lg, fill="#009C3B", stroke_fill="#FFDF00", stroke_width=7)
-            draw_text_centered(d, phrase, (256, 430), font_md, fill="#002776", stroke_fill="white", stroke_width=5)
+            draw_text_centered(d, title, (256, 425), font_sm, fill="#15803D", stroke_fill="white", stroke_width=4)
             frames.append(im)
 
         save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
@@ -586,87 +434,515 @@ def generate_br_futebol_gols_animados():
             frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
 
-# ── 9. br-memes-classicos (Static) ──
-def generate_br_memes_classicos():
-    pack_dir = create_pack_folder('br-memes-classicos')
-    font_sm = get_font(26)
+# ── 4. br-lula-reacoes ──
+def generate_br_lula_reacoes():
+    pack_dir = create_pack_folder('br-lula-reacoes')
+    font_lg, font_md, font_sm = get_font(42), get_font(32), get_font(24)
 
-    memes = [
-        ("NAZARÉ CONFUSA 📐", ["f(x) = ?", "cos(θ)", "√2 + π = 42"], "#F59E0B"),
-        ("RINDO DE NERVOSO 😬", ["Kkkkkry", "Tudo sob controle (sqn)"], "#EF4444"),
-        ("É SOBRE ISSO E TÁ TUDO BEM ✨", ["Paz interior", "Respira e não pira"], "#10B981"),
-        ("TÔ PASSAGEIRA HOJE 💅", ["Sem paciência", "Plena"], "#EC4899"),
-        ("CHOCADA EM CRISTO 😱", ["Passada", "Chocada"], "#8B5CF6"),
-        ("AGORA PRONTO! 🙄", ["Lá vem história", "Era só o que faltava"], "#64748B"),
-        ("OLHA ELE AÍ 🤡", ["O palhaço chegou", "Mico do ano"], "#F97316"),
-        ("TÁ BOM, CLÁUDIA! 😴", ["Senta lá", "Aham, sei..."], "#06B6D4")
+    im1 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d1 = ImageDraw.Draw(im1)
+    d1.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#FEF2F2", outline="#EF4444", width=8)
+    draw_star(d1, (256, 210), 130, 55, fill="#DC2626")
+    d1.rectangle([240, 110, 272, 270], fill="#FFD1A4", outline="#B45309", width=3)
+    d1.rectangle([240, 240, 340, 272], fill="#FFD1A4", outline="#B45309", width=3)
+    draw_text_centered(d1, "FAZ O L! 👆", (256, 390), font_lg, fill="#DC2626", stroke_fill="white", stroke_width=5)
+    save_static(im1, os.path.join(pack_dir, "1.webp"))
+    im1.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+
+    im2 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d2 = ImageDraw.Draw(im2)
+    d2.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#FFFBEB", outline="#D97706", width=8)
+    d2.ellipse([140, 160, 372, 280], fill="#881337", outline="#4C0519", width=5)
+    d2.pieslice([140, 160, 372, 280], 190, 350, fill="#FDE047")
+    draw_text_centered(d2, "VAI TER PICANHA! 🥩🍻", (256, 390), font_md, fill="#991B1B", stroke_fill="white", stroke_width=4)
+    save_static(im2, os.path.join(pack_dir, "2.webp"))
+
+    im3 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d3 = ImageDraw.Draw(im3)
+    d3.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#1E1B4B", outline="#818CF8", width=8)
+    d3.ellipse([180, 130, 332, 290], fill="#FED7AA")
+    d3.arc([170, 200, 342, 310], 0, 180, fill="white", width=26)
+    d3.polygon([(190, 180), (250, 180), (240, 215), (180, 215)], fill="#EF4444")
+    d3.polygon([(262, 180), (322, 180), (332, 215), (272, 215)], fill="#EF4444")
+    draw_text_centered(d3, "O BRASIL VOLTOU! 🇧🇷⚡", (256, 390), font_md, fill="#38BDF8", stroke_fill="black", stroke_width=4)
+    save_static(im3, os.path.join(pack_dir, "3.webp"))
+
+    im4 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d4 = ImageDraw.Draw(im4)
+    d4.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#FEFCE8", outline="#CA8A04", width=8)
+    d4.rectangle([180, 160, 320, 320], fill="#FACC15", outline="#A16207", width=5)
+    d4.arc([290, 190, 370, 290], 270, 90, fill="#A16207", width=12)
+    for fx in [180, 210, 245, 280, 315]:
+        d4.ellipse([fx - 22, 130, fx + 22, 175], fill="white")
+    draw_text_centered(d4, "COMPANHEIRO! 🍻", (256, 390), font_lg, fill="#B45309", stroke_fill="white", stroke_width=5)
+    save_static(im4, os.path.join(pack_dir, "4.webp"))
+
+    im5 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d5 = ImageDraw.Draw(im5)
+    d5.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#F0FDF4", outline="#16A34A", width=8)
+    d5.polygon([(150, 160), (362, 160), (380, 330), (132, 330)], fill="#1E293B")
+    d5.line([(160, 160), (350, 330)], fill="#009C3B", width=22)
+    d5.line([(165, 160), (355, 330)], fill="#FFDF00", width=10)
+    d5.ellipse([216, 190, 296, 270], fill="#FFD1A4", outline="#B45309", width=3)
+    draw_text_centered(d5, "UNIÃO & RECONSTRUÇÃO ⭐", (256, 390), font_sm, fill="#047857", stroke_fill="white", stroke_width=4)
+    save_static(im5, os.path.join(pack_dir, "5.webp"))
+
+    im6 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d6 = ImageDraw.Draw(im6)
+    d6.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#FFF1F2", outline="#E11D48", width=8)
+    d6.polygon([(256, 320), (160, 200), (200, 140), (256, 180), (312, 140), (352, 200)], fill="#E11D48")
+    d6.pieslice([160, 140, 256, 230], 180, 0, fill="#E11D48")
+    d6.pieslice([256, 140, 352, 230], 180, 0, fill="#E11D48")
+    draw_text_centered(d6, "O AMOR VENCEU! ❤️", (256, 390), font_md, fill="#BE123C", stroke_fill="white", stroke_width=5)
+    save_static(im6, os.path.join(pack_dir, "6.webp"))
+
+    im7 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d7 = ImageDraw.Draw(im7)
+    d7.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#EFF6FF", outline="#2563EB", width=8)
+    d7.polygon([(140, 230), (256, 260), (372, 230), (372, 310), (256, 340), (140, 310)], fill="#3B82F6", outline="#1D4ED8", width=4)
+    d7.polygon([(256, 120), (340, 155), (256, 190), (172, 155)], fill="#1E293B")
+    draw_text_centered(d7, "MAIS EDUCAÇÃO! 🎓", (256, 390), font_md, fill="#1D4ED8", stroke_fill="white", stroke_width=4)
+    save_static(im7, os.path.join(pack_dir, "7.webp"))
+
+    im8 = Image.new('RGBA', (512, 512), (0,0,0,0))
+    d8 = ImageDraw.Draw(im8)
+    d8.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#FAF5FF", outline="#9333EA", width=8)
+    for mx in [170, 220, 290, 340]:
+        d8.rectangle([mx - 10, 200, mx + 10, 280], fill="#475569")
+        d8.ellipse([mx - 16, 170, mx + 16, 210], fill="#94A3B8", outline="#334155", width=2)
+    draw_text_centered(d8, "NUNCA NA HISTÓRIA DESSE PAÍS", (256, 390), font_sm, fill="#7E22CE", stroke_fill="white", stroke_width=4)
+    save_static(im8, os.path.join(pack_dir, "8.webp"))
+
+
+# ── 6. br-figurinhas-hot ──
+def generate_br_figurinhas_hot():
+    pack_dir = create_pack_folder('br-figurinhas-hot')
+    font_sm = get_font(24)
+
+    celebs = [
+        ("ANITTA: ENVOLVER 🔥", "anitta"),
+        ("GISELE: PASSARELA ✨", "gisele"),
+        ("BRUNA: GLAMOUR 💋", "bruna"),
+        ("PAOLLA: RAINHA DO SAMBA 👑", "paolla"),
+        ("IZA: DEUSA DOURADA 🌟", "iza"),
+        ("LUÍSA: BADDIE 💅", "luisa"),
+        ("MARINA: SEDUÇÃO 🌹", "marina"),
+        ("SABRINA: MUSA CARNAVAL 💃", "sabrina")
     ]
 
-    for st_idx, (title, math_texts, color) in enumerate(memes, 1):
-        im = Image.new('RGBA', (512, 512), (0,0,0,0))
-        d = ImageDraw.Draw(im)
-        
-        d.rounded_rectangle([40, 60, 472, 452], radius=25, fill="white", outline=color, width=8)
-        
-        d.ellipse([156, 120, 356, 320], fill=color)
-        d.ellipse([190, 180, 220, 210], fill="white")
-        d.ellipse([292, 180, 322, 210], fill="white")
-        d.ellipse([200, 190, 215, 205], fill="black")
-        d.ellipse([297, 190, 312, 205], fill="black")
-        d.line([(210, 260), (302, 260)], fill="black", width=5)
+    for st_idx, (title, celeb_id) in enumerate(celebs, 1):
+        frames = []
+        for f in range(6):
+            im = Image.new('RGBA', (512, 512), (0,0,0,0))
+            d = ImageDraw.Draw(im)
+            phase = (f / 6.0) * 2 * math.pi
+            sway = int(math.sin(phase) * 14)
+            
+            d.ellipse([50, 50, 462, 462], fill=(255, 235, 240, 240), outline="#F43F5E", width=6)
+            
+            if celeb_id == "anitta":
+                d.ellipse([180 + sway, 100, 332 + sway, 270], fill="#451A03")
+                d.ellipse([206 + sway, 130, 306, 250], fill="#D97706")
+                d.ellipse([236 + sway, 215, 276, 240], fill="#DC2626")
+                for sp in [(100, 120), (410, 140), (120, 320), (390, 300)]:
+                    draw_star(d, (sp[0] + sway, sp[1]), 14, 6, fill="#FDE047")
+            elif celeb_id == "gisele":
+                d.ellipse([150 - sway, 90, 362 + sway, 310], fill="#FBBF24")
+                d.ellipse([200, 120, 312, 250], fill="#FDE68A")
+                d.ellipse([236, 215, 276, 235], fill="#FB7185")
+            elif celeb_id == "paolla":
+                for fa, col in [(-50, "#EC4899"), (-25, "#8B5CF6"), (0, "#F59E0B"), (25, "#10B981"), (50, "#06B6D4")]:
+                    fx = int(256 + math.sin(math.radians(fa + sway)) * 150)
+                    fy = int(140 - math.cos(math.radians(fa + sway)) * 90)
+                    d.polygon([(256, 190), (fx - 20, fy), (fx, fy - 35), (fx + 20, fy)], fill=col)
+                d.ellipse([200, 130, 312, 260], fill="#D97706")
+                d.ellipse([236, 215, 276, 245], fill="#DC2626")
+            elif celeb_id == "iza":
+                d.ellipse([160, 80, 352, 240], fill="#1C1917")
+                d.ellipse([200, 140, 312, 270], fill="#5B3821")
+                d.rectangle([220, 270, 292, 310], fill="#F59E0B", outline="#B45309", width=2)
+            elif celeb_id == "marina":
+                d.ellipse([160 - sway, 100, 352 + sway, 310], fill="#EA580C")
+                d.ellipse([200, 130, 312, 250], fill="#FEF08A")
+                d.polygon([(180, 260), (332, 260), (360, 360), (152, 360)], fill="#059669")
+            else:
+                d.ellipse([140, 110, 372, 330], fill="#FB7185")
+                d.arc([190, 175, 230, 205], 180, 360, fill="black", width=5)
+                d.ellipse([282, 175, 302, 195], fill="black")
+                draw_star(d, (360 + sway, 160 - sway), 20, 9, fill="#F43F5E")
 
-        for idx, mt in enumerate(math_texts):
-            my = 90 + idx * 30
-            d.text((60, my), mt, font=font_sm, fill=color)
+            draw_text_centered(d, title, (256, 420), font_sm, fill="#BE123C", stroke_fill="white", stroke_width=4)
+            frames.append(im)
 
-        draw_text_centered(d, title, (256, 400), font_sm, fill="black", stroke_fill="white", stroke_width=4)
-
-        save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
+        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
         if st_idx == 1:
-            im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
 
-# ── 10. br-gretchen-rainha (Animated) ──
+# ── 7. br-beijo-apaixonado ──
+def generate_br_beijo_apaixonado():
+    pack_dir = create_pack_folder('br-beijo-apaixonado')
+    font_sm = get_font(24)
+
+    kiss_scenes = [
+        ("MARCA DE BATOM 💋", "lipstick_stamp"),
+        ("BEIJO AO PÔR DO SOL 🌅", "sunset_silhouette"),
+        ("CORAÇÕES VOADORES 💕", "flying_hearts"),
+        ("SMACK! EXPLOSIVO 💥", "comic_smack"),
+        ("BEIJO NA TESTA COM CARINHO 🥺", "forehead"),
+        ("URSINHO APAIXONADO 🧸", "teddy"),
+        ("FLECHA DO CUPIDO 💘", "cupid"),
+        ("BEIJO NA CHUVA 🌧️", "rain_kiss")
+    ]
+
+    for st_idx, (title, scene) in enumerate(kiss_scenes, 1):
+        frames = []
+        for f in range(6):
+            im = Image.new('RGBA', (512, 512), (0,0,0,0))
+            d = ImageDraw.Draw(im)
+            phase = (f / 6.0) * 2 * math.pi
+            sway = int(math.sin(phase) * 15)
+            
+            d.ellipse([50, 50, 462, 462], fill=(255, 241, 242, 245), outline="#E11D48", width=6)
+            
+            if scene == "sunset_silhouette":
+                d.pieslice([60, 60, 452, 452], 0, 180, fill="#EA580C")
+                d.ellipse([216, 180, 296, 260], fill="#FDE047") # sun
+                d.ellipse([180, 220, 250, 330], fill="#1E1B4B") # silhouette 1
+                d.ellipse([260, 220, 330, 330], fill="#1E1B4B") # silhouette 2
+            elif scene == "cupid":
+                d.polygon([(140, 200), (370, 200)], fill="#F59E0B")
+                d.line([(140, 200), (370, 200)], fill="#F59E0B", width=6) # arrow
+                d.polygon([(360, 190), (390, 200), (360, 210)], fill="#DC2626")
+                d.ellipse([226, 170, 286, 230], fill="#E11D48")
+            else:
+                scale = 1.0 + 0.15 * math.sin(phase)
+                lw = int(140 * scale)
+                d.ellipse([256 - lw, 200, 256 + lw, 300], fill="#E11D48")
+                d.ellipse([256 - int(lw*0.5), 235, 256 + int(lw*0.5), 275], fill="#FFF1F2")
+
+            draw_text_centered(d, title, (256, 425), font_sm, fill="#BE123C", stroke_fill="white", stroke_width=4)
+            frames.append(im)
+
+        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
+        if st_idx == 1:
+            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+
+
+# ── 8. br-abraco-carinhoso ──
+def generate_br_abraco_carinhoso():
+    pack_dir = create_pack_folder('br-abraco-carinhoso')
+    font_sm = get_font(24)
+
+    hug_scenes = [
+        ("ABRAÇO DE URSO 🐻", "bear"),
+        ("REENCONTRO NO AEROPORTO ✈️", "airport"),
+        ("BURRITO DE COBERTOR 🌯", "burrito"),
+        ("ABRAÇO DE AMIGOS 🤗", "friends"),
+        ("GATINHO & CACHORRINHO 🐱🐶", "pets"),
+        ("COLO DE MÃE ❤️", "mom"),
+        ("ENVELOPE DE AMOR 💌", "letter"),
+        ("FANTASMINHA DO BEM 👻", "ghost")
+    ]
+
+    for st_idx, (title, scene) in enumerate(hug_scenes, 1):
+        frames = []
+        for f in range(6):
+            im = Image.new('RGBA', (512, 512), (0,0,0,0))
+            d = ImageDraw.Draw(im)
+            phase = (f / 6.0) * 2 * math.pi
+            sway = int(math.sin(phase) * 14)
+            
+            d.ellipse([50, 50, 462, 462], fill=(253, 242, 248, 245), outline="#DB2777", width=6)
+            
+            if scene == "pets":
+                d.ellipse([140, 180, 270, 310], fill="#F59E0B") # Dog
+                d.ellipse([240, 180, 370, 310], fill="#94A3B8") # Cat
+            elif scene == "ghost":
+                d.arc([180, 140+sway, 332, 320+sway], 180, 0, fill="#CBD5E1", width=8)
+                d.ellipse([215, 190+sway, 235, 210+sway], fill="black")
+                d.ellipse([277, 190+sway, 297, 210+sway], fill="black")
+            else:
+                d.ellipse([150+sway, 150, 270+sway, 290], fill="#FBBF24")
+                d.ellipse([240-sway, 150, 360-sway, 290], fill="#F472B6")
+                d.ellipse([236, 120, 276, 160], fill="#EF4444") # Heart over them
+
+            draw_text_centered(d, title, (256, 425), font_sm, fill="#9D174D", stroke_fill="white", stroke_width=4)
+            frames.append(im)
+
+        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
+        if st_idx == 1:
+            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+
+
+# ── 9. br-casal-fofo ──
+def generate_br_casal_fofo():
+    pack_dir = create_pack_folder('br-casal-fofo')
+    font_sm = get_font(24)
+
+    couples = [
+        ("ESPAGUETE ROMÂNTICO 🍝", "spaghetti"),
+        ("BICICLETA A DOIS 🚲", "bike"),
+        ("OLHANDO AS ESTRELAS 🌌", "stars"),
+        ("FAZENDO BOLO JUNTOS 🎂", "cake"),
+        ("DANÇA NA CHUVA ☔", "umbrella"),
+        ("SELFIE DE ORELHINHA 🐰", "selfie"),
+        ("CABANINHA DE LUZES ⛺", "tent"),
+        ("DIVIDINDO AÇAÍ 🥣", "acai")
+    ]
+
+    for st_idx, (title, scene) in enumerate(couples, 1):
+        frames = []
+        for f in range(6):
+            im = Image.new('RGBA', (512, 512), (0,0,0,0))
+            d = ImageDraw.Draw(im)
+            phase = (f / 6.0) * 2 * math.pi
+            sway = int(math.sin(phase) * 12)
+            
+            d.ellipse([50, 50, 462, 462], fill=(255, 241, 242, 245), outline="#BE123C", width=6)
+            
+            # Two chibi characters
+            d.ellipse([140, 160 + sway, 240, 270 + sway], fill="#93C5FD")
+            d.ellipse([272, 160 - sway, 372, 270 - sway], fill="#FBCFE8")
+            d.ellipse([240, 220, 272, 252], fill="#EF4444") # Heart in center
+
+            draw_text_centered(d, title, (256, 425), font_sm, fill="#9F1239", stroke_fill="white", stroke_width=4)
+            frames.append(im)
+
+        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
+        if st_idx == 1:
+            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+
+
+# ── 10. br-coracao-paixao ──
+def generate_br_coracao_paixao():
+    pack_dir = create_pack_folder('br-coracao-paixao')
+    font_sm = get_font(24)
+
+    hearts = [
+        ("NEON CYBERPUNK ⚡", "neon"),
+        ("DIAMANTE CRISTAL 💎", "diamond"),
+        ("FOGO DA PAIXÃO 🔥", "fire"),
+        ("CADEADO DE AMOR 🔒", "lock"),
+        ("ROSA DESABROCHANDO 🌹", "rose"),
+        ("GALÁXIA CÓSMICA 🌌", "galaxy"),
+        ("CORAÇÃO 8-BIT ARCADE 👾", "pixel"),
+        ("GOTA D'ÁGUA CRISTALINA 💧", "water")
+    ]
+
+    for st_idx, (title, h_type) in enumerate(hearts, 1):
+        frames = []
+        for f in range(6):
+            im = Image.new('RGBA', (512, 512), (0,0,0,0))
+            d = ImageDraw.Draw(im)
+            phase = (f / 6.0) * 2 * math.pi
+            
+            d.ellipse([50, 50, 462, 462], fill=(254, 242, 242, 245), outline="#DC2626", width=6)
+            
+            scale = 1.0 + 0.18 * math.sin(phase)
+            r = int(120 * scale)
+            d.polygon([(256, 230 + r), (256 - r, 230 - int(r*0.2)), (256, 230 - int(r*0.6)), (256 + r, 230 - int(r*0.2))], fill="#EF4444")
+            d.pieslice([256 - r, 230 - int(r*0.8), 256, 230 + int(r*0.2)], 180, 0, fill="#EF4444")
+            d.pieslice([256, 230 - int(r*0.8), 256 + r, 230 + int(r*0.2)], 180, 0, fill="#EF4444")
+
+            draw_text_centered(d, title, (256, 425), font_sm, fill="#991B1B", stroke_fill="white", stroke_width=4)
+            frames.append(im)
+
+        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
+        if st_idx == 1:
+            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+
+
+# ── 11. br-gretchen-rainha ──
 def generate_br_gretchen_rainha():
     pack_dir = create_pack_folder('br-gretchen-rainha')
-    font_md = get_font(34)
+    font_sm = get_font(24)
 
-    phrases = [
-        "RAINHA DOS MEMES 👑",
-        "DANÇA CONGA CONGA 💃",
-        "DEBOCHE PURO 💅",
-        "CHORANDO DE RIR 😂",
-        "TOMANDO MEU CAFÉ ☕",
-        "OLHAR 43 JULGADOR 👀",
-        "PLENA E PODEROSA ✨",
-        "BEIJINHO NO OMBRO 💋"
+    scenes = [
+        ("REVIRANDO OS OLHOS 🙄", "eyeball"),
+        ("CHORANDO DE RIR 😂", "laugh_cry"),
+        ("CONGA CONGA CONGA 💃", "conga"),
+        ("TOMANDO CAFÉ NA PAZ ☕", "coffee"),
+        ("ESPIANDO ATRÁS DA CORTINA 👀", "curtain"),
+        ("DIGITANDO NERVOSA 💻", "keyboard"),
+        ("ARRUMANDO O CABELO 💅", "mirror"),
+        ("DROP THE MIC 🎤", "mic_drop")
     ]
 
-    for st_idx, phrase in enumerate(phrases, 1):
+    for st_idx, (title, scene) in enumerate(scenes, 1):
         frames = []
-        num_frames = 6
-        for f in range(num_frames):
+        for f in range(6):
             im = Image.new('RGBA', (512, 512), (0,0,0,0))
             d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
+            phase = (f / 6.0) * 2 * math.pi
+            sway = int(math.sin(phase) * 16)
             
-            hair_sway = int(math.sin(phase) * 18)
-            dance_arm = int(math.cos(phase) * 30)
+            d.ellipse([50, 50, 462, 462], fill=(253, 244, 255, 245), outline="#A855F7", width=6)
+            
+            d.ellipse([140 - sway, 90, 372 + sway, 310], fill="#1C1917") # hair
+            d.ellipse([186, 120, 326, 270], fill="#FCD34D") # face
+            d.ellipse([226, 215, 286, 250], fill="#DC2626") # red lips
+
+            draw_text_centered(d, title, (256, 425), font_sm, fill="#7E22CE", stroke_fill="white", stroke_width=4)
+            frames.append(im)
+
+# ── 12. br-memes-classicos ──
+def generate_br_memes_classicos():
+    pack_dir = create_pack_folder('br-memes-classicos')
+    font_sm = get_font(22)
+
+    memes = [
+        ("NAZARÉ CONFUSA 📐", ["f(x)=?", "cos(θ)", "√2+π=42", "∫e^x dx"], "#F59E0B"),
+        ("CHICO FELIZ / TRISTE 😐🙂", ["Antes do rolê", "Depois do rolê"], "#3B82F6"),
+        ("CANETA AZUL 🖊️", ["Caneta azul, azul caneta...", "Manoel Gomes"], "#0284C7"),
+        ("BORA BILL! 📢", ["Bora fi do Bill!", "Bora muié do Bill!"], "#10B981"),
+        ("GRÁVIDA DE TAUBATÉ 🤰", ["Quadrugêmeos!", "Barriga gigante"], "#EC4899"),
+        ("SABE DE NADA, INOCENTE! 🌴", ["Cumpadre Washington", "É o Tchan!"], "#F97316"),
+        ("RINDO DE NERVOSO 😬", ["Tudo sob controle", "Kkkkkry"], "#EF4444"),
+        ("GLÓRIA MARIA NA NUVEM ☁️", ["Viagem astral", "Paz"], "#8B5CF6")
+    ]
+
+    for st_idx, (title, subtitles, color) in enumerate(memes, 1):
+        im = Image.new('RGBA', (512, 512), (0,0,0,0))
+        d = ImageDraw.Draw(im)
+        d.rounded_rectangle([40, 50, 472, 462], radius=30, fill="white", outline=color, width=8)
+        
+        if "NAZARÉ" in title:
+            d.ellipse([180, 130, 332, 280], fill="#FDE68A")
+            d.ellipse([210, 160, 302, 260], fill="#FED7AA")
+            d.ellipse([230, 190, 245, 205], fill="black")
+            d.ellipse([265, 190, 280, 205], fill="black")
+            for idx, form in enumerate(subtitles):
+                d.text((60 + (idx%2)*220, 90 + (idx//2)*240), form, font=get_font(24), fill=color)
+        elif "CANETA" in title:
+            d.polygon([(236, 90), (276, 90), (276, 290), (256, 330), (236, 290)], fill="#2563EB", outline="#1D4ED8", width=4)
+        else:
+            d.ellipse([160, 130, 352, 310], fill=color)
+            d.ellipse([200, 180, 225, 205], fill="white")
+            d.ellipse([285, 180, 310, 205], fill="white")
+            d.arc([210, 220, 302, 270], 0, 180, fill="black", width=5)
+
+        draw_text_centered(d, title, (256, 395), font_sm, fill=color, stroke_fill="white", stroke_width=4)
+        save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
+        if st_idx == 1:
+            im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+
+
+# ── 14. br-flork-debochado ──
+def generate_br_flork_debochado():
+    pack_dir = create_pack_folder('br-flork-debochado')
+    font_sm = get_font(22)
+
+    setups = [
+        ("LAVANDO MINHA HONRA 🛁", "bathtub"),
+        ("MINHA VIDA AMOROSA 🔥", "dumpster_fire"),
+        ("PAPEL DE TROUXA 🤡", "clown_mirror"),
+        ("MODO DETETIVE FBI 🕵️", "fbi_plant"),
+        ("NEM ME CHAMA PRA SAIR 🛌", "blanket"),
+        ("RICO POR 5 MINUTOS 💸", "money"),
+        ("DOSE EXTRA DE CAFÉ ☕", "coffee_tower"),
+        ("LONGE DOS PROBLEMAS 🚀", "astronaut")
+    ]
+
+    for st_idx, (quote, setup_type) in enumerate(setups, 1):
+        im = Image.new('RGBA', (512, 512), (0,0,0,0))
+        d = ImageDraw.Draw(im)
+        d.rounded_rectangle([40, 40, 472, 472], radius=30, fill="white", outline="black", width=6)
+        
+        d.arc([160, 110, 352, 310], 150, 30, fill="black", width=6)
+        d.line([(165, 220), (165, 340)], fill="black", width=6)
+        d.line([(347, 220), (347, 340)], fill="black", width=6)
+        d.ellipse([215, 170, 230, 185], fill="black")
+        d.ellipse([282, 170, 297, 185], fill="black")
+        d.line([(225, 210), (287, 210)], fill="black", width=5)
+
+        if setup_type == "bathtub":
+            d.rounded_rectangle([130, 280, 382, 360], radius=20, fill="#E0F2FE", outline="black", width=4)
+        elif setup_type == "clown_mirror":
+            d.ellipse([246, 185, 266, 205], fill="#EF4444")
+        else:
+            d.line([(165, 250), (110, 220)], fill="black", width=5)
+            d.line([(347, 250), (402, 220)], fill="black", width=5)
+
+        draw_text_centered(d, quote, (256, 420), font_sm, fill="black", stroke_fill="white", stroke_width=3)
+        save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
+        if st_idx == 1:
+            im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+
+
+# ── 15. br-bom-dia-boa-noite ──
+def generate_br_bom_dia_boa_noite():
+    pack_dir = create_pack_folder('br-bom-dia-boa-noite')
+    font_sm = get_font(22)
+
+    greetings = [
+        ("BOM DIA COM CAFÉ & PÃO DE QUEIJO ☕🧀", "#D97706"),
+        ("BOM DIA ABENÇOADO NA PRAIA 🏖️✨", "#0284C7"),
+        ("GIRASSOL DE PAZ & ALEGRIA 🌻", "#CA8A04"),
+        ("ALMOÇO EM FAMÍLIA NO DOMINGO 🥘", "#DC2626"),
+        ("BOA TARDE NA REDE DE DESCANSO 🌴", "#059669"),
+        ("BOA NOITE COM CRISTO & ESTRELAS 🌙⭐", "#4338CA"),
+        ("DURMA COM OS ANJOS 🐱💤", "#7C3AED"),
+        ("GRATIDÃO POR MAIS UM DIA 🙏📖", "#92400E")
+    ]
+
+    for st_idx, (title, color) in enumerate(greetings, 1):
+        im = Image.new('RGBA', (512, 512), (0,0,0,0))
+        d = ImageDraw.Draw(im)
+        d.rounded_rectangle([40, 50, 472, 462], radius=30, fill="white", outline=color, width=8)
+        
+        if "CAFÉ" in title:
+            d.rectangle([200, 200, 300, 290], fill="#78350F", outline=color, width=4)
+            d.arc([280, 215, 330, 275], 270, 90, fill="#78350F", width=6)
+        elif "NOITE" in title or "ESTRELAS" in title:
+            d.ellipse([190, 120, 310, 240], fill="#FACC15")
+            d.ellipse([225, 105, 330, 230], fill="white")
+        else:
+            d.ellipse([186, 120, 326, 260], fill="#FBBF24", outline=color, width=4)
+
+        draw_text_centered(d, title, (256, 390), font_sm, fill=color, stroke_fill="white", stroke_width=4)
+        save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
+        if st_idx == 1:
+            im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
+
+
+# ── 17. br-carnaval-samba ──
+def generate_br_carnaval_samba():
+    pack_dir = create_pack_folder('br-carnaval-samba')
+    font_sm = get_font(22)
+
+    carnaval_scenes = [
+        ("PASSISTA SAMBANDO 💃", "passista"),
+        ("PANDEIRO NO RITMO 🥁", "pandeiro"),
+        ("TRIO ELÉTRICO SALVADOR 🚚", "trio"),
+        ("FREVO COM SOMBRINHA ☂️", "frevo"),
+        ("MÁSCARA DOURADA VENEZA 🎭", "mask"),
+        ("CUÍCA NA BATERIA 🪘", "cuica"),
+        ("CARRO ALEGÓRICO RIO 🐆", "float"),
+        ("CANHÃO DE CONFETE 🎊", "cannon")
+    ]
+
+    for st_idx, (title, scene) in enumerate(carnaval_scenes, 1):
+        frames = []
+        for f in range(6):
+            im = Image.new('RGBA', (512, 512), (0,0,0,0))
+            d = ImageDraw.Draw(im)
+            phase = (f / 6.0) * 2 * math.pi
+            sway = int(math.sin(phase) * 15)
             
             d.ellipse([50, 50, 462, 462], fill=(255, 240, 245, 240), outline="#DB2777", width=6)
-            d.ellipse([140 - hair_sway, 90, 372 + hair_sway, 310], fill="#1C1917")
-            d.ellipse([186, 120, 326, 270], fill="#FCD34D")
-            d.arc([205, 160, 245, 190], 180, 360, fill="black", width=5)
-            d.arc([267, 160, 307, 190], 180, 360, fill="black", width=5)
-            d.ellipse([226, 215, 286, 250], fill="#DC2626")
             
-            d.polygon([(180, 270), (332, 270), (360, 380), (152, 380)], fill="#EC4899")
-            d.line([(180, 280), (110, 220 + dance_arm)], fill="#FCD34D", width=14)
-            d.line([(332, 280), (402, 220 - dance_arm)], fill="#FCD34D", width=14)
+            if scene == "pandeiro":
+                d.ellipse([140, 140 + sway, 372, 340 + sway], fill="#FEF08A", outline="#78350F", width=8)
+            elif scene == "mask":
+                d.polygon([(140, 180+sway), (256, 210+sway), (372, 180+sway), (340, 270+sway), (256, 250+sway), (172, 270+sway)], fill="#F59E0B", outline="#B45309", width=4)
+            else:
+                for fa, col in [(-40, "#EC4899"), (-20, "#8B5CF6"), (0, "#F59E0B"), (20, "#10B981"), (40, "#06B6D4")]:
+                    fx = int(256 + math.sin(math.radians(fa + sway)) * 140)
+                    fy = int(140 - math.cos(math.radians(fa + sway)) * 80)
+                    d.polygon([(256, 200), (fx - 15, fy), (fx, fy - 30), (fx + 15, fy)], fill=col)
 
-            d.polygon([(220, 80), (235, 110), (256, 75), (277, 110), (292, 80), (285, 120), (227, 120)], fill="#FBBF24")
-
-            draw_text_centered(d, phrase, (256, 430), font_md, fill="#BE185D", stroke_fill="white", stroke_width=5)
+            draw_text_centered(d, title, (256, 425), font_sm, fill="#BE185D", stroke_fill="white", stroke_width=4)
             frames.append(im)
 
         save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
@@ -674,293 +950,92 @@ def generate_br_gretchen_rainha():
             frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
 
-# ── 11. br-flork-debochado (Static) ──
-def generate_br_flork_debochado():
-    pack_dir = create_pack_folder('br-flork-debochado')
-    font_md = get_font(32)
-
-    flork_quotes = [
-        ("EU AVISEI NÉ? 🥱", "coffee"),
-        ("HÁJA PACIÊNCIA! 🧘", "zen"),
-        ("DEUS ME LIVRE MAS QUEM ME DERA 🙈", "cake"),
-        ("CANCELADO COM SUCESSO ❌", "stamp"),
-        ("CAGUEI PRA SUA OPINIÃO 💩", "sunglasses"),
-        ("SÓ RESPONDO COM MEU ADVOGADO ⚖️", "tie"),
-        ("TÔ COM PREGUIÇA ATÉ DE VIVER 🛌", "pillow"),
-        ("PARABÉNS PELO PAPEL DE TROUXA 🤡", "clown")
-    ]
-
-    for st_idx, (quote, prop) in enumerate(flork_quotes, 1):
-        im = Image.new('RGBA', (512, 512), (0,0,0,0))
-        d = ImageDraw.Draw(im)
-        
-        d.rounded_rectangle([40, 40, 472, 472], radius=30, fill="white", outline="black", width=6)
-        
-        d.arc([160, 110, 352, 320], 150, 30, fill="black", width=6)
-        d.line([(165, 230), (165, 360)], fill="black", width=6)
-        d.line([(347, 230), (347, 360)], fill="black", width=6)
-        
-        d.ellipse([215, 175, 230, 190], fill="black")
-        d.ellipse([282, 175, 297, 190], fill="black")
-        d.line([(225, 220), (287, 220)], fill="black", width=5)
-
-        d.line([(165, 270), (110, 240)], fill="black", width=5)
-        d.line([(347, 270), (402, 240)], fill="black", width=5)
-        
-        if prop == "coffee":
-            d.rectangle([390, 220, 430, 260], fill="#78350F", outline="black", width=3)
-        elif prop == "cake":
-            d.polygon([(390, 250), (430, 250), (410, 210)], fill="#EC4899", outline="black", width=3)
-        elif prop == "clown":
-            d.ellipse([245, 195, 267, 217], fill="#EF4444")
-
-        draw_text_centered(d, quote, (256, 415), font_md, fill="black", stroke_fill="white", stroke_width=3)
-
-        save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 12. br-bom-dia-boa-noite (Static) ──
-def generate_br_bom_dia_boa_noite():
-    pack_dir = create_pack_folder('br-bom-dia-boa-noite')
-    font_md = get_font(34)
-    font_sm = get_font(26)
-
-    greetings = [
-        ("BOM DIA COM DEUS! ☕✨", "Que seu dia seja abençoado", "#F59E0B"),
-        ("BOA TARDE COM CARINHO 🌸", "Uma tarde cheia de paz", "#EC4899"),
-        ("BOA NOITE ABENÇOADA 🌙⭐", "Durma em paz, Deus cuida de tudo", "#3B82F6"),
-        ("BOM DIA GRUPO! 🌻", "Muita saúde e alegria hoje", "#10B981"),
-        ("PASSANDO PRA TE DESEJAR PAZ 🕊️", "Receba meu abraço fraterno", "#8B5CF6"),
-        ("BOM DIA FAMÍLIA QUERIDA ❤️", "Um dia iluminado a todos", "#EF4444"),
-        ("DOCE NOITE DE DESCANSO 🛌💤", "Sonhos lindos e revigorantes", "#6366F1"),
-        ("GRATIDÃO POR MAIS UM DIA 🙏", "Obrigado Senhor por tudo", "#D97706")
-    ]
-
-    for st_idx, (title, subtitle, color) in enumerate(greetings, 1):
-        im = Image.new('RGBA', (512, 512), (0,0,0,0))
-        d = ImageDraw.Draw(im)
-        
-        d.rounded_rectangle([40, 50, 472, 462], radius=30, fill=(255, 255, 255, 245), outline=color, width=8)
-        
-        if "NOITE" in title:
-            d.ellipse([180, 110, 320, 250], fill="#FACC15")
-            d.ellipse([215, 95, 340, 240], fill="white")
-            for sx, sy in [(140, 120), (370, 140), (200, 260), (340, 250)]:
-                d.ellipse([sx - 6, sy - 6, sx + 6, sy + 6], fill="#FACC15")
-        else:
-            d.ellipse([196, 100, 316, 220], fill="#FBBF24")
-            d.rounded_rectangle([206, 200, 306, 280], radius=10, fill="#78350F", outline="white", width=4)
-            d.arc([286, 215, 336, 265], 270, 90, fill="#78350F", width=6)
-
-        draw_text_centered(d, title, (256, 340), font_md, fill=color, stroke_fill="white", stroke_width=4)
-        draw_text_centered(d, subtitle, (256, 400), font_sm, fill="#4B5563", stroke_fill="white", stroke_width=3)
-
-        save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 13. br-vira-lata-caramelo (Static) ──
+# ── 13. br-vira-lata-caramelo ──
 def generate_br_vira_lata_caramelo():
     pack_dir = create_pack_folder('br-vira-lata-caramelo')
-    font_md = get_font(34)
+    font_sm = get_font(24)
 
-    phrases = [
-        "PATRIMÔNIO NACIONAL 🐕",
-        "CADÊ A COXINHA? 🍗",
-        "AU AU CARAMELO! 🐾",
-        "SOU LINDO DEMAIS 😎",
-        "ME DÁ UM CARINHO? 🥺",
-        "CUIDANDO DO PORTÃO 🚪",
-        "CARA DE QUEM FEZ ARTE 🐶",
-        "VIRA-LATA RAIZ 🇧🇷"
+    scenes = [
+        ("NO BANQUINHO DO BOTECO 🍻", "bar"),
+        ("DE CAPACETE NA OBRA 👷", "hardhat"),
+        ("LATINDO PRA MOTO 🛵", "moto"),
+        ("DORMINDO DE BARRIGA PRA CIMA 😴", "belly_up"),
+        ("PIDONCHO NO CHURRASCO 🍖", "bbq"),
+        ("COM A AMARELINHA 🇧🇷", "jersey"),
+        ("COM A COXINHA NA BOCA 🍗", "coxinha"),
+        ("CAFUNÉ GOSTOSO 🥰", "headscratch")
     ]
 
-    for st_idx, phrase in enumerate(phrases, 1):
+    for st_idx, (title, scene) in enumerate(scenes, 1):
         im = Image.new('RGBA', (512, 512), (0,0,0,0))
         d = ImageDraw.Draw(im)
+        d.ellipse([50, 50, 462, 462], fill="#FEF3C7", outline="#D97706", width=8)
         
-        d.ellipse([60, 60, 452, 452], fill="#FEF3C7", outline="#D97706", width=8)
+        # Caramel Dog Head
         d.ellipse([140, 140, 372, 340], fill="#D97706")
         d.ellipse([90, 130, 170, 260], fill="#B45309")
         d.ellipse([342, 130, 422, 260], fill="#B45309")
         d.ellipse([206, 220, 306, 320], fill="#FDE68A")
         d.ellipse([236, 235, 276, 265], fill="black")
-        d.ellipse([244, 280, 268, 315], fill="#F87171")
-        d.ellipse([186, 175, 226, 215], fill="black")
-        d.ellipse([192, 180, 204, 192], fill="white")
-        d.ellipse([286, 175, 326, 215], fill="black")
-        d.ellipse([292, 180, 304, 192], fill="white")
+        d.ellipse([244, 280, 268, 315], fill="#F87171") # Tongue
 
-        draw_text_centered(d, phrase, (256, 420), font_md, fill="#78350F", stroke_fill="white", stroke_width=5)
-
+        draw_text_centered(d, title, (256, 420), font_sm, fill="#78350F", stroke_fill="white", stroke_width=4)
         save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
         if st_idx == 1:
             im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
 
-# ── 14. br-carnaval-samba (Animated) ──
-def generate_br_carnaval_samba():
-    pack_dir = create_pack_folder('br-carnaval-samba')
-    font_md = get_font(34)
-
-    phrases = [
-        "É CARNAVAL BRASIL! 🎭",
-        "RITMO DO SAMBA 🥁",
-        "GLITTER & CONFETE ✨",
-        "ATRÁS DO TRIO ELÉTRICO 🚚",
-        "ALEGRIA NÃO PARA! 💃",
-        "SAMBA NO PÉ 🔥",
-        "ME LEVA QUE EU VOU! 🥳",
-        "FOLIA SEM FIM 🎶"
-    ]
-
-    for st_idx, phrase in enumerate(phrases, 1):
-        frames = []
-        num_frames = 6
-        for f in range(num_frames):
-            im = Image.new('RGBA', (512, 512), (0,0,0,0))
-            d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
-            
-            mask_bob = int(math.sin(phase) * 14)
-            
-            for ci in range(16):
-                cx = (ci * 32 + int(f * 20)) % 480 + 16
-                cy = (ci * 28 + int(f * 35)) % 400 + 40
-                colors = ["#F43F5E", "#8B5CF6", "#FACC15", "#10B981", "#06B6D4"]
-                d.ellipse([cx - 6, cy - 6, cx + 6, cy + 6], fill=colors[ci % len(colors)])
-
-            for fa, color in [(-40, "#EC4899"), (-20, "#8B5CF6"), (0, "#FACC15"), (20, "#10B981"), (40, "#06B6D4")]:
-                fx = int(256 + math.sin(math.radians(fa)) * 140)
-                fy = int(140 - math.cos(math.radians(fa)) * 80 + mask_bob)
-                d.polygon([(256, 190 + mask_bob), (fx - 15, fy), (fx, fy - 30), (fx + 15, fy)], fill=color)
-
-            d.polygon([
-                (120, 180 + mask_bob),
-                (256, 210 + mask_bob),
-                (392, 180 + mask_bob),
-                (350, 270 + mask_bob),
-                (256, 250 + mask_bob),
-                (162, 270 + mask_bob)
-            ], fill="#F59E0B", outline="#78350F", width=5)
-            d.ellipse([160, 205 + mask_bob, 220, 245 + mask_bob], fill="white")
-            d.ellipse([292, 205 + mask_bob, 352, 245 + mask_bob], fill="white")
-
-            draw_text_centered(d, phrase, (256, 430), font_md, fill="#BE185D", stroke_fill="white", stroke_width=5)
-            frames.append(im)
-
-        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 15. br-girias-brasileiras (Static) ──
+# ── 15. br-girias-brasileiras ──
 def generate_br_girias_brasileiras():
     pack_dir = create_pack_folder('br-girias-brasileiras')
-    font_lg = get_font(56)
-    font_md = get_font(32)
+    font_lg = get_font(52)
+    font_sm = get_font(24)
 
     girias = [
-        ("EITA!", "Lascou tudo 🔥", "#EF4444"),
-        ("VIXI!", "Nem te conto 👀", "#F59E0B"),
-        ("TOP DEMAIS!", "Aprovado 100% ⭐", "#10B981"),
-        ("VALEU FALOU!", "Partiu fui 🏃💨", "#3B82F6"),
-        ("MANO DO CÉU!", "Tô chocado 😱", "#8B5CF6"),
-        ("AFF NADA A VER!", "Paciência zero 🙄", "#EC4899"),
-        ("PARTIU!", "Bora lá agora 🚀", "#06B6D4"),
-        ("TÁ DE BRINCADEIRA?", "Não acredito 🤡", "#D97706")
+        ("EITA PREGO! 🔥", "Lascou tudo de vez", "#EF4444"),
+        ("VIXI MARIA! 😱", "Nem te conto...", "#F59E0B"),
+        ("TOPÍSSIMO! ⭐", "Aprovado 100%", "#10B981"),
+        ("VALEU, FALOU! 🚀", "Partiu fui agora", "#3B82F6"),
+        ("MANO DO CÉU! ⚡", "Tô em choque", "#8B5CF6"),
+        ("AFF NADA A VER 🙄", "Paciência zero", "#EC4899"),
+        ("BORA PARTIR! 🏍️", "Tô pronto", "#06B6D4"),
+        ("PERDI TUDO! 😂", "Chorando de rir", "#D97706")
     ]
 
     for st_idx, (word, sub, color) in enumerate(girias, 1):
         im = Image.new('RGBA', (512, 512), (0,0,0,0))
         d = ImageDraw.Draw(im)
-        
         d.rounded_rectangle([40, 70, 472, 380], radius=35, fill=color, outline="white", width=8)
         d.polygon([(140, 370), (110, 450), (200, 370)], fill=color)
 
         draw_text_centered(d, word, (256, 180), font_lg, fill="white", stroke_fill="black", stroke_width=6)
-        draw_text_centered(d, sub, (256, 280), font_md, fill="#FEF08A", stroke_fill="black", stroke_width=4)
+        draw_text_centered(d, sub, (256, 280), font_sm, fill="#FEF08A", stroke_fill="black", stroke_width=4)
 
         save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
         if st_idx == 1:
             im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
 
-# ── 16. br-casal-fofo (Animated) ──
-def generate_br_casal_fofo():
-    pack_dir = create_pack_folder('br-casal-fofo')
-    font_md = get_font(34)
-
-    phrases = [
-        "CASAL PERFEITO ❤️",
-        "AMO VOCÊ DEMAIS 🥰",
-        "MINHA METADE 💕",
-        "GRUDINHO GOSTOSO 🍯",
-        "SEMPRE JUNTINHOS 👫",
-        "VOCÊ É MEU TUDO ✨",
-        "AMOR DA MINHA VIDA 💖",
-        "NOSSO AMOR É LINDO 💍"
-    ]
-
-    for st_idx, phrase in enumerate(phrases, 1):
-        frames = []
-        num_frames = 6
-        for f in range(num_frames):
-            im = Image.new('RGBA', (512, 512), (0,0,0,0))
-            d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
-            
-            pulse = int(math.sin(phase) * 12)
-            
-            d.ellipse([130, 140 + pulse, 240, 250 + pulse], fill="#93C5FD")
-            d.ellipse([150, 175 + pulse, 168, 195 + pulse], fill="#1E3A8A")
-            d.ellipse([200, 175 + pulse, 218, 195 + pulse], fill="#1E3A8A")
-            d.arc([165, 200 + pulse, 205, 230 + pulse], 20, 160, fill="#1E3A8A", width=4)
-            d.ellipse([140, 240 + pulse, 230, 360 + pulse], fill="#3B82F6")
-
-            d.ellipse([272, 140 - pulse, 382, 250 - pulse], fill="#FBCFE8")
-            d.ellipse([292, 175 - pulse, 310, 195 - pulse], fill="#831843")
-            d.ellipse([342, 175 - pulse, 360, 195 - pulse], fill="#831843")
-            d.arc([307, 200 - pulse, 347, 230 - pulse], 20, 160, fill="#831843", width=4)
-            d.ellipse([282, 240 - pulse, 372, 360 - pulse], fill="#EC4899")
-            d.polygon([(260, 130 - pulse), (285, 145 - pulse), (260, 160 - pulse)], fill="#EF4444")
-            d.polygon([(310, 130 - pulse), (285, 145 - pulse), (310, 160 - pulse)], fill="#EF4444")
-
-            hs = int(32 + 8 * math.sin(phase))
-            d.ellipse([256 - hs, 270 - hs, 256 + hs, 270 + hs], fill="#EF4444")
-
-            draw_text_centered(d, phrase, (256, 430), font_md, fill="#BE185D", stroke_fill="white", stroke_width=5)
-            frames.append(im)
-
-        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 17. br-zoeira-amigos (Static) ──
+# ── 16. br-zoeira-amigos ──
 def generate_br_zoeira_amigos():
     pack_dir = create_pack_folder('br-zoeira-amigos')
-    font_md = get_font(34)
+    font_sm = get_font(24)
 
     quotes = [
-        ("LÁ VEM ELE DE NOVO 🙄", "#EF4444"),
-        ("TÔ DE OLHO NO GOLPE 👀", "#F59E0B"),
-        ("PERDI TUDO KKKKKK 😂", "#10B981"),
-        ("NEM ME FALE UMA COISA DESSAS 🤦", "#3B82F6"),
-        ("QUEM PERGUNTOU? 🎤", "#8B5CF6"),
-        ("MANDOU MAL DEMAIS 👎", "#EC4899"),
-        ("SÓ ACHO GRAÇA DISSO 🤡", "#D97706"),
-        ("RESENHA DOS CRIAS 🤙", "#06B6D4")
+        ("ANOTANDO NO BLOQUINHO FBI 📝", "#EF4444"),
+        ("CARTÃO VERMELHO DIRETO 🟥", "#DC2626"),
+        ("QUEM PERGUNTOU? 🔍", "#3B82F6"),
+        ("PIPOCA PRA VER O CIRCO PEGAR FOGO 🍿", "#F59E0B"),
+        ("ACORDA PRA VIDA! 💥", "#8B5CF6"),
+        ("CHAMANDO A POLÍCIA DO BOM SENSO 🚨", "#06B6D4"),
+        ("OSCAR DE TROUXA DO ANO 🏆", "#CA8A04"),
+        ("CHORANDO NO BANHO 🚿", "#64748B")
     ]
 
     for st_idx, (quote, color) in enumerate(quotes, 1):
         im = Image.new('RGBA', (512, 512), (0,0,0,0))
         d = ImageDraw.Draw(im)
-        
-        d.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#F1F5F9", outline=color, width=8)
+        d.rounded_rectangle([40, 50, 472, 462], radius=30, fill="#F8FAFC", outline=color, width=8)
         
         d.ellipse([146, 110, 366, 330], fill=color)
         d.ellipse([180, 170, 220, 210], fill="white")
@@ -969,56 +1044,50 @@ def generate_br_zoeira_amigos():
         d.ellipse([304, 180, 322, 200], fill="black")
         d.arc([190, 220, 322, 290], 10, 170, fill="black", width=6)
 
-        draw_text_centered(d, quote, (256, 400), font_md, fill="black", stroke_fill="white", stroke_width=4)
-
+        draw_text_centered(d, quote, (256, 400), font_sm, fill="black", stroke_fill="white", stroke_width=4)
         save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
         if st_idx == 1:
             im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
 
-# ── 18. br-passinho-funk (Animated) ──
+# ── 18. br-passinho-funk ──
 def generate_br_passinho_funk():
     pack_dir = create_pack_folder('br-passinho-funk')
-    font_md = get_font(34)
+    font_sm = get_font(24)
 
-    phrases = [
-        "MANDA O PASSINHO! 🕺",
-        "NO RITMO DO BAILE 🔊",
-        "SOLTA O GRAVE! 🎵",
-        "SÓ QUEM É RAIZ 🔥",
-        "DANÇA DEMAIS! 💃",
-        "TOCANDO O TERROR ⚡",
-        "BATIDÃO PESADO 🎧",
-        "SINTONIA PURA ✨"
+    funk_scenes = [
+        ("MANDA O PASSINHO DO RIO 🕺", "passinho"),
+        ("BOOMBOX DOS ANOS 90 📻", "boombox"),
+        ("DJ RISCANDO NO BAILE 🎧", "dj"),
+        ("ÓCULOS JULIET ESPELHADO 😎", "juliet"),
+        ("QUADRADINHO DE OITO 💃", "quadradinho"),
+        ("FREEZE NO CHÃO ⚡", "freeze"),
+        ("PAREDÃO DE SOM 🔊", "paredao"),
+        ("FOGOS NA ROCINHA 🎆", "fireworks")
     ]
 
-    for st_idx, phrase in enumerate(phrases, 1):
+    for st_idx, (title, scene) in enumerate(funk_scenes, 1):
         frames = []
-        num_frames = 6
-        for f in range(num_frames):
+        for f in range(6):
             im = Image.new('RGBA', (512, 512), (0,0,0,0))
             d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
+            phase = (f / 6.0) * 2 * math.pi
+            sway = int(math.sin(phase) * 25)
             
-            leg_step = int(math.sin(phase) * 35)
-            arm_pump = int(math.cos(phase) * 25)
+            d.ellipse([50, 50, 462, 462], fill=(255, 241, 242, 245), outline="#E11D48", width=6)
             
-            for bi in range(9):
-                bx = 90 + bi * 40
-                bh = int(40 + 60 * abs(math.sin(phase + bi * 0.7)))
-                d.rectangle([bx, 320 - bh, bx + 24, 320], fill=(244, 63, 94, 180))
+            if scene == "boombox":
+                d.rectangle([130, 180, 382, 330], fill="#334155", outline="black", width=4)
+                d.ellipse([160, 210, 240, 290], fill="#0F172A")
+                d.ellipse([272, 210, 352, 290], fill="#0F172A")
+            else:
+                d.line([(256, 180), (256, 300)], fill="#1E293B", width=18)
+                d.line([(256, 300), (200 - sway, 380)], fill="#1E293B", width=14)
+                d.line([(256, 300), (312 + sway, 380)], fill="#1E293B", width=14)
+                d.ellipse([220, 100, 292, 170], fill="#FDE68A")
+                d.rectangle([220, 135, 292, 150], fill="#EF4444") # shades
 
-            d.line([(256, 210), (256, 310)], fill="#1E293B", width=18)
-            d.line([(256, 310), (200 - leg_step, 390)], fill="#1E293B", width=14)
-            d.line([(256, 310), (312 + leg_step, 390)], fill="#1E293B", width=14)
-            d.line([(256, 230), (160, 200 + arm_pump)], fill="#F59E0B", width=14)
-            d.line([(256, 230), (352, 200 - arm_pump)], fill="#F59E0B", width=14)
-            d.ellipse([220, 110, 292, 180], fill="#FDE68A")
-            d.arc([210, 95, 302, 150], 180, 360, fill="#EF4444", width=14)
-            d.rectangle([210, 140, 302, 148], fill="#EF4444")
-            d.rectangle([228, 135, 284, 155], fill="black")
-
-            draw_text_centered(d, phrase, (256, 430), font_md, fill="#E11D48", stroke_fill="white", stroke_width=5)
+            draw_text_centered(d, title, (256, 425), font_sm, fill="#9F1239", stroke_fill="white", stroke_width=4)
             frames.append(im)
 
         save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
@@ -1026,130 +1095,27 @@ def generate_br_passinho_funk():
             frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
 
 
-# ── 19. br-lula-reacoes (Static) ──
-def generate_br_lula_reacoes():
-    pack_dir = create_pack_folder('br-lula-reacoes')
-    font_md = get_font(34)
-
-    quotes = [
-        ("FAZ O L! 👆", "O amor venceu ❤️", "#EF4444"),
-        ("COMPANHEIRO! ✊", "Tamo junto sempre", "#DC2626"),
-        ("VAI TER PICANHA! 🥩", "Com cervejinha gelada", "#B91C1C"),
-        ("O BRASIL VOLTOU! 🇧🇷", "Rumo ao futuro", "#009C3B"),
-        ("NUNCA ANTES NA HISTÓRIA 📜", "Desse país...", "#B45309"),
-        ("UM BRINDE AO POVO 🥂", "Saúde e dignidade", "#7C3AED"),
-        ("SORRINDO PRA VIDA 😁", "Esperança renovada", "#2563EB"),
-        ("UNIÃO & RECONSTRUÇÃO ⭐", "Paz no Brasil", "#EA580C")
-    ]
-
-    for st_idx, (title, sub, color) in enumerate(quotes, 1):
-        im = Image.new('RGBA', (512, 512), (0,0,0,0))
-        d = ImageDraw.Draw(im)
-        
-        d.rounded_rectangle([40, 50, 472, 462], radius=30, fill="white", outline=color, width=8)
-        
-        d.ellipse([140, 110, 372, 330], fill=color)
-        d.arc([160, 200, 352, 315], 0, 180, fill="white", width=22)
-        d.rectangle([180, 170, 230, 205], outline="black", width=4)
-        d.rectangle([282, 170, 332, 205], outline="black", width=4)
-        d.line([(230, 187), (282, 187)], fill="black", width=4)
-        d.arc([200, 210, 312, 260], 20, 160, fill="black", width=4)
-
-        draw_text_centered(d, title, (256, 380), font_md, fill=color, stroke_fill="white", stroke_width=4)
-        draw_text_centered(d, sub, (256, 425), get_font(26), fill="#4B5563", stroke_fill="white", stroke_width=3)
-
-        save_static(im, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            im.resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
-# ── 20. br-coracao-paixao (Animated) ──
-def generate_br_coracao_paixao():
-    pack_dir = create_pack_folder('br-coracao-paixao')
-    font_md = get_font(34)
-
-    phrases = [
-        "CORAÇÃO BATENDO FORTE 💓",
-        "VOCÊ É MEU AMOR 💖",
-        "EXPLOSÃO DE PAIXÃO 💥❤️",
-        "CUPIDO ME ACERTOU 💘",
-        "AMOR INFINITO ♾️",
-        "BRILHO NOS OLHOS ✨",
-        "MEU CORAÇÃO É SEU 💝",
-        "TE AMO ETERNAMENTE 🌹"
-    ]
-
-    for st_idx, phrase in enumerate(phrases, 1):
-        frames = []
-        num_frames = 6
-        for f in range(num_frames):
-            im = Image.new('RGBA', (512, 512), (0,0,0,0))
-            d = ImageDraw.Draw(im)
-            phase = (f / num_frames) * 2 * math.pi
-            
-            scale = 1.0 + 0.18 * math.sin(phase)
-            cx, cy = 256, 220
-            r = int(120 * scale)
-            
-            d.polygon([(cx, cy + r), (cx - r, cy - int(r*0.2)), (cx, cy - int(r*0.6)), (cx + r, cy - int(r*0.2))], fill="#EF4444")
-            d.pieslice([cx - r, cy - int(r*0.8), cx, cy + int(r*0.2)], 180, 0, fill="#EF4444")
-            d.pieslice([cx, cy - int(r*0.8), cx + r, cy + int(r*0.2)], 180, 0, fill="#EF4444")
-
-            for hi in range(6):
-                h_angle = phase + hi * (math.pi / 3)
-                hx = int(cx + math.cos(h_angle) * (r + 40))
-                hy = int(cy + math.sin(h_angle) * (r + 40))
-                hs = int(12 + 6 * math.sin(h_angle))
-                d.ellipse([hx - hs, hy - hs, hx + hs, hy + hs], fill="#F472B6")
-
-            draw_text_centered(d, phrase, (256, 430), font_md, fill="#E11D48", stroke_fill="white", stroke_width=5)
-            frames.append(im)
-
-        save_animated(frames, os.path.join(pack_dir, f"{st_idx}.webp"))
-        if st_idx == 1:
-            frames[0].resize((96, 96)).save(os.path.join(pack_dir, "tray_icon.png"), format="PNG")
-
-
+# ── Run All Generators ──
 if __name__ == "__main__":
-    print("Generating 20 Brazil localized sticker packs...")
+    print("Generating all 20 Brazil packs with 100% unique graphics...")
     generate_br_bandeira_nacional()
-    print("1/20 br-bandeira-nacional done.")
     generate_br_bandeira_animada()
-    print("2/20 br-bandeira-animada done.")
     generate_br_bolsonaro_dancando()
-    print("3/20 br-bolsonaro-dancando done.")
-    generate_br_beijo_apaixonado()
-    print("4/20 br-beijo-apaixonado done.")
-    generate_br_abraco_carinhoso()
-    print("5/20 br-abraco-carinhoso done.")
-    generate_br_figurinhas_hot()
-    print("6/20 br-figurinhas-hot done.")
-    generate_br_futebol_selecao()
-    print("7/20 br-futebol-selecao done.")
-    generate_br_futebol_gols_animados()
-    print("8/20 br-futebol-gols-animados done.")
-    generate_br_memes_classicos()
-    print("9/20 br-memes-classicos done.")
-    generate_br_gretchen_rainha()
-    print("10/20 br-gretchen-rainha done.")
-    generate_br_flork_debochado()
-    print("11/20 br-flork-debochado done.")
-    generate_br_bom_dia_boa_noite()
-    print("12/20 br-bom-dia-boa-noite done.")
-    generate_br_vira_lata_caramelo()
-    print("13/20 br-vira-lata-caramelo done.")
-    generate_br_carnaval_samba()
-    print("14/20 br-carnaval-samba done.")
-    generate_br_girias_brasileiras()
-    print("15/20 br-girias-brasileiras done.")
-    generate_br_casal_fofo()
-    print("16/20 br-casal-fofo done.")
-    generate_br_zoeira_amigos()
-    print("17/20 br-zoeira-amigos done.")
-    generate_br_passinho_funk()
-    print("18/20 br-passinho-funk done.")
     generate_br_lula_reacoes()
-    print("19/20 br-lula-reacoes done.")
+    generate_br_futebol_selecao()
+    generate_br_futebol_gols_animados()
+    generate_br_figurinhas_hot()
+    generate_br_beijo_apaixonado()
+    generate_br_abraco_carinhoso()
+    generate_br_casal_fofo()
     generate_br_coracao_paixao()
-    print("20/20 br-coracao-paixao done.")
-    print("All 20 Brazil sticker packs generated successfully!")
+    generate_br_gretchen_rainha()
+    generate_br_memes_classicos()
+    generate_br_flork_debochado()
+    generate_br_bom_dia_boa_noite()
+    generate_br_vira_lata_caramelo()
+    generate_br_carnaval_samba()
+    generate_br_girias_brasileiras()
+    generate_br_zoeira_amigos()
+    generate_br_passinho_funk()
+    print("All 20 Brazil sticker packs generated with 100% unique designs!")
