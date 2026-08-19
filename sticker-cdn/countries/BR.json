@@ -168,7 +168,7 @@
       "cat": [
         "funny"
       ],
-      "count": 8,
+      "count": 10,
       "tray": "tray_icon.png",
       "animated_sticker_pack": false,
       "stickers": [
@@ -179,7 +179,9 @@
         "5.webp",
         "6.webp",
         "7.webp",
-        "8.webp"
+        "8.webp",
+        "9.webp",
+        "10.webp"
       ]
     },
     {
