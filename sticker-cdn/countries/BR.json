@@ -34,8 +34,8 @@
   ],
   "packs": [
     {
-      "id": "br-figurinhas-hot",
-      "name": "Figurinhas Quentes & Sexy 🔥",
+      "id": "br-abraco-carinhoso",
+      "name": "Abraços & Carinho 🤗",
       "cat": [
         "love",
         "emotions"
@@ -52,6 +52,62 @@
         "6.webp",
         "7.webp",
         "8.webp"
+      ]
+    },
+    {
+      "id": "br-bandeira-animada",
+      "name": "Bandeira do Brasil 2 🇧🇷",
+      "cat": [
+        "festivals",
+        "trending"
+      ],
+      "count": 15,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp",
+        "9.webp",
+        "10.webp",
+        "11.webp",
+        "12.webp",
+        "13.webp",
+        "14.webp",
+        "15.webp"
+      ]
+    },
+    {
+      "id": "br-bandeira-nacional",
+      "name": "Bandeiras do Brasil 🇧🇷",
+      "cat": [
+        "festivals",
+        "trending"
+      ],
+      "count": 15,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp",
+        "9.webp",
+        "10.webp",
+        "11.webp",
+        "12.webp",
+        "13.webp",
+        "14.webp",
+        "15.webp"
       ]
     },
     {
@@ -76,24 +132,19 @@
       ]
     },
     {
-      "id": "br-abraco-carinhoso",
-      "name": "Abraços & Carinho 🤗",
+      "id": "br-bolsonaro-dancando",
+      "name": "Bolsonaro Dançando & Memes 🕺",
       "cat": [
-        "love",
-        "emotions"
+        "funny",
+        "trending"
       ],
-      "count": 8,
+      "count": 3,
       "tray": "tray_icon.png",
       "animated_sticker_pack": false,
       "stickers": [
         "1.webp",
         "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
+        "3.webp"
       ]
     },
     {
@@ -117,8 +168,77 @@
       ]
     },
     {
+      "id": "br-comida-brasileira-1",
+      "name": "Comidas do Brasil 1 🍲",
+      "cat": [
+        "trending",
+        "emotions"
+      ],
+      "count": 10,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp",
+        "9.webp",
+        "10.webp"
+      ]
+    },
+    {
+      "id": "br-comida-brasileira-2",
+      "name": "Comidas do Brasil 2 🥐",
+      "cat": [
+        "trending",
+        "emotions"
+      ],
+      "count": 10,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp",
+        "9.webp",
+        "10.webp"
+      ]
+    },
+    {
+      "id": "br-comida-brasileira-3",
+      "name": "Comidas do Brasil 3 🍹",
+      "cat": [
+        "trending",
+        "emotions"
+      ],
+      "count": 10,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp",
+        "9.webp",
+        "10.webp"
+      ]
+    },
+    {
       "id": "br-coracao-paixao",
-      "name": "Corações & Paixão Animados 💖",
+      "name": "Corações & Paixão 💖",
       "cat": [
         "love",
         "emotions"
@@ -137,6 +257,90 @@
         "8.webp",
         "9.webp",
         "10.webp"
+      ]
+    },
+    {
+      "id": "br-figurinhas-hot",
+      "name": "Figurinhas Quentes & Sexy 🔥",
+      "cat": [
+        "love",
+        "emotions"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-flork-debochado",
+      "name": "Flork Debochado",
+      "cat": [
+        "trending"
+      ],
+      "count": 8,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp"
+      ]
+    },
+    {
+      "id": "br-futebol-gols-animados",
+      "name": "Esportes & Futebol ⚽",
+      "cat": [
+        "sports",
+        "trending"
+      ],
+      "count": 15,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp",
+        "3.webp",
+        "4.webp",
+        "5.webp",
+        "6.webp",
+        "7.webp",
+        "8.webp",
+        "9.webp",
+        "10.webp",
+        "11.webp",
+        "12.webp",
+        "13.webp",
+        "14.webp",
+        "15.webp"
+      ]
+    },
+    {
+      "id": "br-futebol-selecao",
+      "name": "Seleção Brasileira & Craques ⚽",
+      "cat": [
+        "sports",
+        "trending"
+      ],
+      "count": 2,
+      "tray": "tray_icon.png",
+      "animated_sticker_pack": false,
+      "stickers": [
+        "1.webp",
+        "2.webp"
       ]
     },
     {
@@ -164,7 +368,7 @@
     },
     {
       "id": "br-memes-classicos",
-      "name": "Memes Clássicos Brasileiros",
+      "name": "Memes Clássicos Brasileiros 😂",
       "cat": [
         "funny"
       ],
@@ -185,34 +389,13 @@
       ]
     },
     {
-      "id": "br-bolsonaro-dancando",
-      "name": "Bolsonaro Dançando & Memes",
-      "cat": [
-        "funny",
-        "trending"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-vira-lata-caramelo",
-      "name": "Vira-lata Caramelo 🐕",
+      "id": "global-emoji-remix",
+      "name": "Funny Faces Reactions",
       "cat": [
         "funny",
         "emotions"
       ],
-      "count": 8,
+      "count": 17,
       "tray": "tray_icon.png",
       "animated_sticker_pack": false,
       "stickers": [
@@ -223,58 +406,83 @@
         "5.webp",
         "6.webp",
         "7.webp",
-        "8.webp"
+        "8.webp",
+        "9.webp",
+        "10.webp",
+        "11.webp",
+        "12.webp",
+        "13.webp",
+        "14.webp",
+        "15.webp",
+        "16.webp",
+        "17.webp"
       ]
     },
     {
-      "id": "br-zoeira-amigos",
-      "name": "Zoeira & Resenha com Amigos 😂",
+      "id": "global-football-bg",
+      "name": "Football Backgrounds",
       "cat": [
-        "funny"
+        "sports"
       ],
-      "count": 8,
+      "count": 16,
       "tray": "tray_icon.png",
       "animated_sticker_pack": false,
       "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
+        "batch_sticker_1781528131810_3.webp",
+        "batch_sticker_1781528131876_1.webp",
+        "batch_sticker_1781528131979_16.webp",
+        "batch_sticker_1781528131998_13.webp",
+        "batch_sticker_1781528132032_14.webp",
+        "batch_sticker_1781528132105_7.webp",
+        "batch_sticker_1781528132105_9.webp",
+        "batch_sticker_1781528132142_17.webp",
+        "batch_sticker_1781528132155_5.webp",
+        "batch_sticker_1781528132228_15.webp",
+        "batch_sticker_1781528132301_8.webp",
+        "batch_sticker_1781528132307_2.webp",
+        "batch_sticker_1781528132557_4.webp",
+        "batch_sticker_1781528132639_10.webp",
+        "batch_sticker_1781528132686_6.webp",
+        "batch_sticker_1781528132750_11.webp"
       ]
     },
     {
-      "id": "br-futebol-selecao",
-      "name": "Seleção Brasileira & Futebol ⚽",
+      "id": "global-football-kicks",
+      "name": "Football Kicks",
       "cat": [
-        "sports",
-        "trending"
+        "sports"
       ],
-      "count": 8,
+      "count": 18,
       "tray": "tray_icon.png",
       "animated_sticker_pack": false,
       "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
+        "batch_sticker_1781528132440_12.webp",
+        "batch_sticker_1781528178521_13.webp",
+        "batch_sticker_1781528180411_2.webp",
+        "batch_sticker_1781528182542_3.webp",
+        "batch_sticker_1781528184714_16.webp",
+        "batch_sticker_1781528186878_14.webp",
+        "batch_sticker_1781528190001_1.webp",
+        "batch_sticker_1781528194128_17.webp",
+        "batch_sticker_1781528198519_15.webp",
+        "batch_sticker_1781528200986_10.webp",
+        "batch_sticker_1781528203521_11.webp",
+        "batch_sticker_1781528206070_7.webp",
+        "batch_sticker_1781528209847_12.webp",
+        "batch_sticker_1781528213893_8.webp",
+        "batch_sticker_1781528217288_5.webp",
+        "batch_sticker_1781528220581_6.webp",
+        "batch_sticker_1781528223952_4.webp",
+        "batch_sticker_1781528227345_9.webp"
       ]
     },
     {
-      "id": "br-futebol-gols-animados",
-      "name": "Golaços & Comemorações ⚽",
+      "id": "global-love-hearts",
+      "name": "Animated Faces Reactions",
       "cat": [
-        "sports",
-        "trending"
+        "love"
       ],
-      "count": 8,
+      "count": 30,
       "tray": "tray_icon.png",
       "animated_sticker_pack": true,
       "stickers": [
@@ -285,56 +493,38 @@
         "5.webp",
         "6.webp",
         "7.webp",
-        "8.webp"
+        "8.webp",
+        "9.webp",
+        "10.webp",
+        "11.webp",
+        "12.webp",
+        "13.webp",
+        "14.webp",
+        "15.webp",
+        "16.webp",
+        "17.webp",
+        "18.webp",
+        "19.webp",
+        "20.webp",
+        "21.webp",
+        "22.webp",
+        "23.webp",
+        "24.webp",
+        "25.webp",
+        "26.webp",
+        "27.webp",
+        "28.webp",
+        "29.webp",
+        "30.webp"
       ]
     },
     {
-      "id": "br-bom-dia-boa-noite",
-      "name": "Bom Dia & Boa Noite com Fé 🙏",
-      "cat": [
-        "greetings"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-flork-debochado",
-      "name": "Flork Debochado & Engraçado",
-      "cat": [
-        "funny"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-lula-reacoes",
-      "name": "Lula & Política Reações",
+      "id": "global-reactions",
+      "name": "Reaction Stickers",
       "cat": [
         "funny"
       ],
-      "count": 8,
+      "count": 17,
       "tray": "tray_icon.png",
       "animated_sticker_pack": false,
       "stickers": [
@@ -345,112 +535,16 @@
         "5.webp",
         "6.webp",
         "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-carnaval-samba",
-      "name": "Carnaval & Ritmo de Samba 🎭",
-      "cat": [
-        "festivals",
-        "trending"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-passinho-funk",
-      "name": "Dança & Passinho do Funk 🎵",
-      "cat": [
-        "trending",
-        "festivals"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-girias-brasileiras",
-      "name": "Gírias do Brasil (Eita, Vixi)",
-      "cat": [
-        "emotions",
-        "funny"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-bandeira-animada",
-      "name": "Bandeira do Brasil Animada 🇧🇷",
-      "cat": [
-        "festivals",
-        "trending"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": true,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
-      ]
-    },
-    {
-      "id": "br-bandeira-nacional",
-      "name": "Bandeiras do Brasil 🇧🇷",
-      "cat": [
-        "festivals",
-        "trending"
-      ],
-      "count": 8,
-      "tray": "tray_icon.png",
-      "animated_sticker_pack": false,
-      "stickers": [
-        "1.webp",
-        "2.webp",
-        "3.webp",
-        "4.webp",
-        "5.webp",
-        "6.webp",
-        "7.webp",
-        "8.webp"
+        "8.webp",
+        "9.webp",
+        "10.webp",
+        "11.webp",
+        "12.webp",
+        "13.webp",
+        "14.webp",
+        "15.webp",
+        "16.webp",
+        "17.webp"
       ]
     }
   ]
